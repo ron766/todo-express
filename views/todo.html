@@ -1,0 +1,108 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>To-Do App</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+  <head>
+  <body>
+    <center>
+      <h2><%= welcomeMessage %></h2>
+      <h2><%= todoFileTxtShow %></h2>
+    </center>
+
+    <div class="container" ng-app="todomvc">
+			<div id="todoapp" ng-controller="TodoCtrl">
+				<h1 class="text-center">ToDoMVC </h1>
+					<!-- div class top buttons -->
+					<div class="row">
+		        <div class="col-sm-2 col-sm-offset-2  text-center">
+		          <span id="todo-count">
+		          </span>
+		        </div>
+		        <div class="col-sm-4 text-center" >
+		          <ul class="list-inline" id="filters">
+		            <li>
+		              <a class="btn btn-sm" href="#/">All</a>
+		            </li>
+		            <li>
+		              <a class="btn btn-sm" href="#/active">Active <span class="badge badge-info"></span></a>
+		            </li>
+		            <li>
+		              <a class="btn btn-sm" href="#/completed">Completed</a>
+		            </li>
+		          </ul>
+		        </div>
+		        <div class="col-sm-2  text-center">
+		          <button class="btn btn-sm btn-success" id="clear-completed">Clear completed</button>
+		        </div>
+		  		</div><!--/ row -->
+
+		  		<!-- row to clear all -->
+		      <div class="row">
+		        <div class="col-sm-4 col-sm-offset-2">
+		          <button class="btn btn-default btn-lg" id="toggle-all">
+		          	<i class="fa fa-check"></i>
+		          </button>
+		          Mark all as complete
+		        </div>
+		        <div class="col-sm-4 text-right">
+		        </div>
+		      </div><!-- /row -->
+
+		      <!-- divider-->
+		      <div class="row">
+		        <div class="col-sm-8 col-sm-offset-2">
+		      		<hr><!-- /divider -->
+		      	</div>
+		      </div>
+
+		      <!-- div class main input row -->
+		      <div class="row">
+		        <div class="col-sm-8 col-sm-offset-2">
+		          <div class="input-group input-group-lg">
+		            <span class="input-group-btn">
+		              <button class="btn btn-success btn-lg clearTextBtn" id="clearText">
+		              	<i class="fa fa-chevron-right"></i>
+		              </button>
+		            </span>
+		            <form id="todo-form" action="/addtask"><!-- onclick="addTodo()" -->
+		              <input class="form-control input-lg" name="taskInput" id="new-todo" placeholder="What needs to be done?" autofocus="">
+		            </form>
+		            <span class="input-group-btn">
+		              <button class="btn btn-default btn-lg" id="addToDo" type="submit"><!-- onclick="addTodo()" -->
+		              	<i class="glyphicon glyphicon-plus"></i>
+		              </button>
+		            </span>
+		          </div><!-- /input-group -->
+		        </div><!-- /.col-lg-6 -->
+		      </div><!-- /row -->
+
+					<!-- todo row -->
+		      <div class="row checksRow">
+		        <div class="col-sm-8 col-sm-offset-2 disp"><!-- given disp prop -->
+		          <div class="input-group input-group-lg">
+		          	<span class="input-group-addon">
+		              <input class="toggle" type="checkbox">
+		            </span>
+		            <form>
+		        			<input class="edit form-control input-lg" id="ckecklist">
+		        	  </form>
+		            <span class="input-group-btn">
+		              <button class="btn btn-default btn-lg destroy">
+		             		<i class="glyphicon glyphicon-remove"></i>
+		              </button>
+		            </span>
+		          </div><!-- /input-group -->
+		        </div><!-- /.col-lg-6 -->
+		      </div><!-- /row -->
+		  	<hr>
+		    <hr>
+			</div><!--/ app -->
+		</div><!--/ container -->
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- <script src="./js/bootstrap.min.js" charset="utf-8"></script> -->
+    <script src="js/script.js"></script>
+  </body>
+</html
