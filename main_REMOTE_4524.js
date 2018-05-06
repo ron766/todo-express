@@ -35,21 +35,11 @@ app.get('/' , (req,res) => {
   });
 });
 
-//todo task append data to json file
+//todo task
 app.get('/addtask' , (req,res) => {
   var task = req.query.taskInput;
-  var writer = fs.createWriteStream('todo.json');
-  res = {
-  	todo: task
-  }
-  var jason = JSON.stringify(res);
-  fs.appendFile('todo.json', jason, function (err) {
-   	if (err) throw err;
-   	console.log('The "data to append" was appended to file!');
-	});
-  console.log(jason);
+  console.log(task);
 });
-
 
 //port running
 app.listen(port, () => {

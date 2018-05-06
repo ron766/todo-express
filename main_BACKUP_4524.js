@@ -9,6 +9,10 @@ const bodyParser = require('body-parser');
 var urlencodedParser = bodyParser.urlencoded({ extended: true });
 
 var router = express.Router();
+<<<<<<< HEAD
+
+=======
+>>>>>>> 1adf3882a8aaaf0773a05a929fa41458295b2c11
 //PORT
 const port = process.env.PORT || 3000;
 
@@ -35,6 +39,7 @@ app.get('/' , (req,res) => {
   });
 });
 
+<<<<<<< HEAD
 //todo task append data to json file
 app.get('/addtask' , (req,res) => {
   var task = req.query.taskInput;
@@ -51,6 +56,14 @@ app.get('/addtask' , (req,res) => {
 });
 
 
+=======
+//todo task
+app.get('/addtask' , (req,res) => {
+  var task = req.query.taskInput;
+  console.log(task);
+});
+
+>>>>>>> 1adf3882a8aaaf0773a05a929fa41458295b2c11
 //port running
 app.listen(port, () => {
  	console.log(`Server is up on port ${port}`);
