@@ -9,3 +9,8 @@ body {
 .disp {
   display: none;
 }
+
+.complete {
+	text-decoration: line-through;
+  background-color: #F08080;
+}
