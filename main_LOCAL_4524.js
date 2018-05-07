@@ -9,6 +9,7 @@ const bodyParser = require('body-parser');
 var urlencodedParser = bodyParser.urlencoded({ extended: true });
 
 var router = express.Router();
+
 //PORT
 const port = process.env.PORT || 3000;
 
@@ -35,46 +36,23 @@ app.get('/' , (req,res) => {
   });
 });
 
-//todo task
-app.post('/addtask' , (req,res) => {
-  var task = req.body.data;
-  // var task = newTodo;
-  console.log('task from call', req.body);
-  var arrayOfObjects = require('./todo.json');
-  console.log(arrayOfObjects);
-  arrayOfObjects.push({
-    todo: task
-  });
-  res.send("success");
-  fs.writeFile('todo.json', JSON.stringify(arrayOfObjects), 'utf-8', function(err) {
-        if (err) throw err
-        console.log('new user added');
-        console.log(arrayOfObjects);
-    });
-    res.send("success");
+//todo task append data to json file
+app.get('/addtask' , (req,res) => {
+  var task = req.query.taskInput;
+  var writer = fs.createWriteStream('todo.json');
+  res = {
+  	todo: task
+  }
+  var jason = JSON.stringify(res);
+  fs.appendFile('todo.json', jason, function (err) {
+   	if (err) throw err;
+   	console.log('The "data to append" was appended to file!');
+	});
+  console.log(jason);
 });
 
 
 //port running
 app.listen(port, () => {
  	console.log(`Server is up on port ${port}`);
-});
-
-
-
-
-
-  // fs.readFile('todo.json' 'utf-8', function(err, jsonfile) {
-  //
-  // };
-
-
-	// var resp = {
-	// 	todo: task
-	// }
-	// var jason = JSON.stringify(resp);
-	// fs.appendFile('todo.json', jason, function (err) {
-	//   	if (err) throw err;
-	//   	console.log('The "data to append" was appended to file!');
-	//  });
-	//  res.status(201).end();
+ });

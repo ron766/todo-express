@@ -6,6 +6,7 @@ body {
 .selected {
   border:1px solid #ddd;
 }
+
 .disp {
   display: none;
 }
