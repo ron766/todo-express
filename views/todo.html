@@ -9,7 +9,6 @@
   <body>
     <center>
       <h2><%= welcomeMessage %></h2>
-      <h2><%= todoFileTxtShow %></h2>
     </center>
 
     <div class="container" ng-app="todomvc">
@@ -27,15 +26,18 @@
 		              <a class="btn btn-sm" href="#/">All</a>
 		            </li>
 		            <li>
-		              <a class="btn btn-sm" href="#/active">Active <span class="badge badge-info"></span></a>
+		              <a class="btn btn-sm" href="#/active" class="showActive">Active 
+		              	<span class="badge badge-info"></span>
+		              </a>
 		            </li>
 		            <li>
-		              <a class="btn btn-sm" href="#/completed">Completed</a>
+		              <a class="btn btn-sm" href="#/completed" class="showCompleted">Completed</a>
 		            </li>
 		          </ul>
 		        </div>
 		        <div class="col-sm-2  text-center">
-		          <button class="btn btn-sm btn-success" id="clear-completed">Clear completed</button>
+		          <button class="btn btn-sm btn-success" id="clear-completed">Clear completed 
+		          </button>
 		        </div>
 		  		</div><!--/ row -->
 
@@ -79,24 +81,27 @@
 		        </div><!-- /.col-lg-6 -->
 		      </div><!-- /row -->
 
+		      <br>
+
 					<!-- todo row -->
 		      <div class="row checksRow">
-		        <div class="col-sm-8 col-sm-offset-2 disp"><!-- given disp prop -->
-		          <div class="input-group input-group-lg">
-		          	<span class="input-group-addon">
-		              <input class="toggle" type="checkbox" id="checkbox">
-		            </span>
-		            <form>
-		        			<input class="edit form-control input-lg" id="ckecklist">
-		        	  </form>
-		            <span class="input-group-btn">
-		              <button class="btn btn-default btn-lg destroy">
-		             		<i class="glyphicon glyphicon-remove"></i>
-		              </button>
-		            </span>
-		          </div><!-- /input-group -->
-		        </div><!-- /.col-lg-6 -->
-		      </div><!-- /row -->
+		        <% for(var i=0; i < JSON.parse(todoFileTxtShow).length; i++) { %>
+					    <div class='col-sm-8 col-sm-offset-2'>
+						    <div class='input-group input-group-lg'>
+						     	<span class='input-group-addon'>
+						     		<input class='toggle' type='checkbox' id='checkbox'> 
+						     	</span> 
+							    <form>  
+							     	<input class='edit form-control input-lg' id='ckecklist' value="<%= JSON.parse(todoFileTxtShow)[i].todo %>">
+							   	</form> 
+							   	<span class='input-group-btn'> 
+							   		<button class='btn btn-default btn-lg destroy'>
+							   			<i class='glyphicon glyphicon-remove'></i> 
+							   		</button> 
+							   	</span> 
+						   	</div> 
+					   	</div>
+						<% } %>
 		  	<hr>
 		    <hr>
 			</div><!--/ app -->
