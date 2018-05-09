@@ -35,7 +35,27 @@ $('.clearTextBtn').on('click', () => {
 
 //function to remove a todo
 $(document).on('click', '.destroy', function() {
-  $(this).closest(".input-group-lg").remove();
+  debugger;
+  var destroyText = $(this).parent().prev().children().val();
+  console.log(destroyText);
+
+  //ajax to fetch array
+  var self=this;
+  $.ajax({
+	  type: 'delete',
+	  data: {todo:destroyText},
+	  url: '/destroy',
+	  success: function(msg) {
+	   	console.log(JSON.stringify(msg)); 
+	   	$(self).closest(".input-group-lg").remove();
+	  },
+	  error: function (err) {
+	   	console.log(err);
+	  }
+	});
+
+  //delete iput div
+	
 });
 
 //mark all complete
@@ -52,6 +72,14 @@ $(document).on('click', '#toggle-all', function() {
       $(".toggle").prop("checked", !clicked);
       clicked = !clicked;
     }
+});
+
+/*unmark all*/
+$(document).on('click', '#toggle-none', function() {
+	debugger;
+	$('body #ckecklist').removeClass('complete');
+    $(".toggle").prop("checked" , false);
+    clicked = !clicked;
 });
 
 //function to mark input with checkbox 

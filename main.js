@@ -39,12 +39,35 @@ app.get('/' , (req,res) => {
 	fs.readFile('./todo.json', 'utf8', function (err, data) {
 	  if (err) throw err;
 	  obj = JSON.parse(data);
-	  console.log(obj);
 	});
 
 });
 
-//todo task
+//todo
+app.delete('/destroy' , (req,res) => {
+	//refer global var obj for ref
+	var taskDestroy = req.body;
+
+	//to remove element
+  function remove(array, element) {
+    return array.filter(e => e.todo !== element);
+	}
+	var todoArray = obj;
+	var todoArrayAfterDelete = remove(todoArray, taskDestroy.todo);
+	console.log("from delete",todoArrayAfterDelete);
+	obj = todoArrayAfterDelete;
+	console.log(obj);
+
+	//now write updated array in file
+	fs.writeFile('todo.json', JSON.stringify(obj), 'utf-8', function(err) {
+      if (err) res.status(400).send(err)
+      console.log('task deleted');
+      console.log("fresh array",obj);
+    });
+    res.status(200).send("success"); 
+
+});
+//todo add task
 app.post('/addtask' , (req,res) => {
   var task = req.body.data;
   console.log('task from call', req.body);
