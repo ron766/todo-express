@@ -10,7 +10,6 @@
     <center>
       <h2><%= welcomeMessage %></h2>
     </center>
-
     <div class="container" ng-app="todomvc">
 			<div id="todoapp" ng-controller="TodoCtrl">
 				<h1 class="text-center">ToDoMVC </h1>
@@ -89,12 +88,14 @@
 		      <div class="row checksRow">
 		        <% for(var i=0; i < JSON.parse(todoFileTxtShow).length; i++) { %>
 					    <div class='col-sm-8 col-sm-offset-2'>
+					    <!-- to show if status is completed -->
+					    <% if (JSON.parse(todoFileTxtShow)[i].status == "completed") {%>
 						    <div class='input-group input-group-lg'>
 						     	<span class='input-group-addon'>
-						     		<input class='toggle' type='checkbox' id='checkbox'> 
+						     		<input class='toggle' type='checkbox' id='checkbox' checked> 
 						     	</span> 
 							    <form>  
-							     	<input class='edit form-control input-lg' id='ckecklist' value="<%= JSON.parse(todoFileTxtShow)[i].todo %>">
+							     	<input class='edit form-control input-lg complete' id='ckecklist' value="<%= JSON.parse(todoFileTxtShow)[i].todo %>" data-id="<%= JSON.parse(todoFileTxtShow)[i].id %>">
 							   	</form> 
 							   	<span class='input-group-btn'> 
 							   		<button class='btn btn-default btn-lg destroy'>
@@ -102,6 +103,22 @@
 							   		</button> 
 							   	</span> 
 						   	</div> 
+					   	<% } else { %>
+					   	<!-- to show if status is active -->
+					   		<div class='input-group input-group-lg'>
+						     	<span class='input-group-addon'>
+						     		<input class='toggle' type='checkbox' id='checkbox'> 
+						     	</span> 
+							    <form>  
+							     	<input class='edit form-control input-lg' id='ckecklist' value="<%= JSON.parse(todoFileTxtShow)[i].todo %>" data-id="<%= JSON.parse(todoFileTxtShow)[i].id %>">
+							   	</form> 
+							   	<span class='input-group-btn'> 
+							   		<button class='btn btn-default btn-lg destroy'>
+							   			<i class='glyphicon glyphicon-remove'></i> 
+							   		</button> 
+							   	</span> 
+						   	</div> 
+					   	<% } %>
 					   	</div>
 						<% } %>
 		  	<hr>
