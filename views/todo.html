@@ -89,7 +89,7 @@
 		        <% for(var i=0; i < JSON.parse(todoFileTxtShow).length; i++) { %>
 					    <div class='col-sm-8 col-sm-offset-2'>
 					    <!-- to show if status is completed -->
-					    <% if (JSON.parse(todoFileTxtShow)[i].status == "completed") {%>
+					    <% if (JSON.parse(todoFileTxtShow)[i].activeStatus == false) {%>
 						    <div class='input-group input-group-lg'>
 						     	<span class='input-group-addon'>
 						     		<input class='toggle' type='checkbox' id='checkbox' checked> 

@@ -4,7 +4,7 @@ var newTodo;
 $("#addToDo").on("click", function() {
   $('.checksRow').removeClass('disp');
   newTodo = { data: $('#new-todo').val()}
-  if (newTodo == "") {
+  if (newTodo.data === "") {
   	alert("Task cannot be blank");
   }
   else {
@@ -17,7 +17,7 @@ $("#addToDo").on("click", function() {
         console.log('success');
         console.log("from script" + data.id);
         $(".checksRow").append("<div class='col-sm-8 col-sm-offset-2'><div class='input-group input-group-lg'><span class='input-group-addon'><input class='toggle' type='checkbox' id='checkbox'> </span> <form>  <input class='edit form-control input-lg' id='ckecklist' value="+JSON.stringify(newTodo.data)+" data-id="+JSON.stringify(data.id)+">  </form> <span class='input-group-btn'> <button class='btn btn-default btn-lg destroy'><i class='glyphicon glyphicon-remove'></i> </button> </span> </div> </div>");
-  	$('#new-todo').val("");
+  			$('#new-todo').val("");
       },
       error: function (err) {
         console.log(err);
