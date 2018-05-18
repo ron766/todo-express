@@ -1,6 +1,13 @@
+/**
+  @author Rohan Patil
+  @description client side script
+*/
 var newTodo;
 
-//function to add data to todo list
+/**
+  @function $("#addToDo").on("click") - add button
+  @description send data to server through ajax call for adding new task
+*/
 $("#addToDo").on("click", function() {
   $('.checksRow').removeClass('disp');
   newTodo = { data: $('#new-todo').val()}
@@ -26,25 +33,32 @@ $("#addToDo").on("click", function() {
   }
 });
 
-//function to clear text from input add box
+/**
+  @function $('.clearTextBtn').on('click') - clear button
+  @description to clear input text box
+*/
 $('.clearTextBtn').on('click', () => {
   debugger;
   $('#new-todo').val("");
 });
 
-//function to remove a todo
+/**
+  @function on('click', '.destroy', function() {}
+  @description to clear a task through ajax call
+*/
 $(document).on('click', '.destroy', function() {
-  debugger;
-  var destroyText = $(this).parent().prev().children().val();
+  var destroyText = $(this).parent().prev().children().attr('data-id');
   console.log(destroyText);
-
   //ajax to fetch array
   var self=this;
   $.ajax({
 	  type: 'delete',
-	  data: {todo:destroyText},
+	  data: {id:destroyText},
 	  url: '/destroy',
 	  success: function(msg) {
+	  	debugger;
+	   	console.log($(self)); 
+
 	   	console.log(JSON.stringify(msg)); 
 	   	$(self).closest(".input-group-lg").remove();
 	  },
@@ -54,7 +68,10 @@ $(document).on('click', '.destroy', function() {
 	});
 });
 
-//mark all complete
+/**
+  @function on('click', '#toggle-all', function() {}
+  @description to mark tasks complete/incomplete
+*/
 var clicked = false;
 $(document).on('click', '#toggle-all', function() {
 	debugger;
@@ -70,7 +87,10 @@ $(document).on('click', '#toggle-all', function() {
     }
 });
 
-/*unmark all*/
+/**
+  @function on('click', '#toggle-none', function() {}
+  @description to unmark all tasks
+*/
 $(document).on('click', '#toggle-none', function() {
 	debugger;
 	$('body #ckecklist').removeClass('complete');
@@ -78,7 +98,10 @@ $(document).on('click', '#toggle-none', function() {
     clicked = !clicked;
 });
 
-//function to mark input completed with checkbox 
+/**
+  @function on('click', '#checkbox', function() {}
+  @description to mark task completed by checkbox through ajax call
+*/
 $(document).on('change', '#checkbox', function() {
   if ($(this).is(':checked')) {
    	//get text of marked task
@@ -104,7 +127,10 @@ $(document).on('change', '#checkbox', function() {
  	}
 });
 
-//function to clear Completed
+/**
+  @function on('click', '#checkbox', function() {}
+  @description to to clear all completed tasks
+*/
 $(document).on('click', '#clear-completed', function() {
 	$("#checkbox:checked").each(function () {
     $(this).closest(".input-group-lg").remove();

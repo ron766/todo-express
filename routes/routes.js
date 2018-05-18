@@ -1,12 +1,29 @@
+/**
+  @author Rohan Patil
+  @description MVC - router file for routing api calls
+*/
+
+/**
+  @description acquiring controller file
+*/
 const controller = require('./../controller/controller');
-// const express = require('express');
-// const router = express.Router();
 
-// router.get('/',controller.app);
+/**
+  @description acquiring router 
+*/
+const router = require('express').Router();
 
-module.exports = function(app) {
-  app.get('/', controller.showTodo),
-  app.post('/addtask', controller.addTodo),
-  app.delete('/destroy', controller.deleteTodo),
-  app.put('/update', controller.toggleStatus)
-};
+/**
+	@function get(),post(),delete(),put()
+  @description acquiring controller file
+  @param {url , controller functions}
+*/
+router.get('/', controller.showTodo);
+router.post('/addtask', controller.addTodo);
+router.delete('/destroy', controller.deleteTodo);
+router.put('/update', controller.toggleStatus);
+
+/**
+  @description exporting objects to be used in other files
+*/
+module.exports =  router

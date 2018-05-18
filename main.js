@@ -1,6 +1,13 @@
+/**
+  @author Rohan Patil
+  @description server script
+*/
+
+/**
+  @description acquiring modules
+*/
 const express = require('express');
 const http = require('http');
-const fs = require('fs');
 const path = require('path');
 const https = require('https');
 const htmlparser = require('htmlparser2');
@@ -8,35 +15,43 @@ const bodyParser = require('body-parser');
 const routes = require('./routes/routes');
 //PORT
 const port = process.env.PORT || 3000;
-
 var urlencodedParser = bodyParser.urlencoded({ extended: true });
 
+/**
+  @description creating express object in app
+*/
 var app = express();
+
+/**
+  @description basically tells the system whether you want to use a simple algorithm for shallow parsing (i.e. false)
+*/
 app.use(bodyParser.urlencoded({ extended: false }))
 
-// parse application/json
+/**
+  @description creating express object in app
+*/
 app.use(bodyParser.json())
-//to set view engine to html and include ejs module
+
+/**
+  @description to set view engine to html and include ejs module
+*/
 app.set('view engine', 'html');
 app.engine('.html', require('ejs').renderFile);
 
-
-//to use css and html
+/**
+  @description to use css and html
+*/
 app.set('views',__dirname+'/views');
 app.use(express.static(__dirname+'/public'))
 
+/**
+  @description route path
+*/
+app.use(require('./routes/routes'));
 
-/*global variables*/
-//for array
-var obj;
-//for timestamp
-var timestamp;
-
-var todoFile = fs.readFileSync('todo.json' , 'utf-8');
-
-const appRoutes = require('./routes/routes.js')(app)
-
-//port running
+/**
+  @description listening on port & displaying the same
+*/
 app.listen(port, () => {
  	console.log(`Server is up on port ${port}`);
 });
