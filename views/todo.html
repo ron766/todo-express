@@ -22,15 +22,15 @@
 		        <div class="col-sm-4 text-center" >
 		          <ul class="list-inline" id="filters">
 		            <li>
-		              <a class="btn btn-sm" href="#/">All</a>
+		              <a class="btn btn-sm allBtn">All</a>
 		            </li>
 		            <li>
-		              <a class="btn btn-sm" href="#/active" class="showActive">Active 
+		              <a class="btn btn-sm activeBtn">Active 
 		              	<span class="badge badge-info"></span>
 		              </a>
 		            </li>
 		            <li>
-		              <a class="btn btn-sm" href="#/completed" class="showCompleted">Completed</a>
+		              <a class="btn btn-sm completedBtn">Completed</a>
 		            </li>
 		          </ul>
 		        </div>
@@ -62,7 +62,7 @@
 		      </div>
 
 		      <!-- div class main input row -->
-		      <div class="row">
+		      <div class="row showAll">
 		        <div class="col-sm-8 col-sm-offset-2">
 		          <div class="input-group input-group-lg">
 		            <span class="input-group-btn">
@@ -80,6 +80,12 @@
 		            </span>
 		          </div><!-- /input-group -->
 		        </div><!-- /.col-lg-6 -->
+		      </div><!-- /row -->
+
+		      <div class="row showActive disp checksRowActive">
+		      </div><!-- /row -->
+
+		      <div class="row showCompleted disp checksRowCompleted">
 		      </div><!-- /row -->
 
 		      <br>

@@ -26,13 +26,13 @@ function showTodo(req,res) {
 	@param {server object request , server object response}
 */
 function addTodo(req,res) {
-	task = req.body.data;
+	var task = req.body.data;
 	console.log('task from call', req.body);
 	if(task.data === "") {
 		throw err;
 	}
 	else {
-		model.addTodo(function(data){
+		model.addTodo(task , function(data){
 			res.send(data);
 		});
 	}
@@ -44,17 +44,18 @@ function addTodo(req,res) {
 		array/file and get response and send it back to client
 	@param {server object request , server object response}
 */
-function toggleStatus(req,res) {
+function deleteTodo(req,res) {
 	//refer global var obj for ref
-	taskDestroy = req.body;
+	var taskDestroy = req.body;
 	console.log("asfsfsfsf",taskDestroy);
-	model.deleteTodo(function(data){
+	model.deleteTodo(taskDestroy,function(data){
 			res.status(200).send("success");
 		});   
 }
 
+
 /*
-	@function deleteTodo(req,res)
+	@function toggleStatus(req,res)
 	@description function to get data from client, pass it to model to update to JSON 
 		array/file and get response and send it back to client
 	@param {server object request , server object response}
@@ -62,27 +63,68 @@ function toggleStatus(req,res) {
 function toggleStatus(req,res) {
 	var updateStatus = req.body;
 	console.log(updateStatus);
-	//traversing array to delete
-	function changeDesc(id) {
-   	for (var i in todoArray) {
-     	if (todoArray[i].id == updateStatus.id) {
-        todoArray[i].activeStatus = false;
-        break; //Stop this loop, we found it!
-     	}		
-   	}
-   	console.log("updated",todoArray);
-   	obj = todoArray;
-   	//now write updated array in file after deletion
-		fs.writeFile('todo.json', JSON.stringify(obj), 'utf-8', function(err) {
-      if (err) res.status(400).send(err)
-	  });
-   	res.send("success");
-	}
-	changeDesc ( updateStatus);
+	model.toggleStatus(updateStatus , function(data){
+			res.status(200).send("Status updated");
+		}); 
 }
+
+
+/*
+	@function toggleAll(req,res)
+	@description function to get data from client, pass it to model to update to JSON 
+		array/file and get response and send it back to client
+	@param {server object request , server object response}
+*/
+function toggleAll(req,res) {
+	var condition = req.query
+	console.log(condition)
+	model.toggleAll(condition.s , function(data){
+			res.status(200).send("Status updated");
+		}); 
+}
+
+
+/*
+	@function toggleAll(req,res)
+	@description function to get data from client, pass it to model to update to JSON 
+		array/file and get response and send it back to client
+	@param {server object request , server object response}
+*/
+function clearCompleted(req,res) {
+	model.clearCompleted(function(data){
+			res.status(200).send("Deleted");
+		});
+}
+
+
+/*
+	@function getActive(req,res)
+	@description function to get active tasks
+	@param {server object request , server object response}
+*/
+function getActive(req,res) {
+	model.getActive(function(data){
+		console.log(data);
+			res.status(200).send(data);
+		});
+}
+
+
+/*
+	@function getCompleted(req,res)
+	@description function to get completed tasks
+	@param {server object request , server object response}
+*/
+function getCompleted(req,res) {
+	model.getCompleted(function(data){
+		console.log(data);
+			res.status(200).send(data);
+		});
+}
+
 
 /**
   @description exporting objects to be used in other files
 */
-module.exports = {showTodo , addTodo , deleteTodo , toggleStatus};
+module.exports = {showTodo , addTodo , deleteTodo , toggleStatus , toggleAll , clearCompleted , getActive , getCompleted};
 
