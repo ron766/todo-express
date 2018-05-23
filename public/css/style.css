@@ -13,6 +13,6 @@ body {
 
 .complete {
 	text-decoration: line-through;
-  background-color: #F08080;
+  background-color: #F08080 !important; 
 }
 

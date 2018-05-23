@@ -123,8 +123,25 @@ function getCompleted(req,res) {
 }
 
 
+/*
+	@function alterTask(req,res)
+	@description function to get data from client, pass it to model to update to JSON 
+		array/file and get response and send it back to client
+	@param {server object request , server object response}
+*/
+function alterTask(req,res) {
+	var text = req.body;
+	console.log(taskId);
+	var taskId = req.params.textId;
+	console.log(text);
+	model.alterTask(taskId , text , function(data){
+			res.send(text);
+		}); 
+}
+
+
 /**
   @description exporting objects to be used in other files
 */
-module.exports = {showTodo , addTodo , deleteTodo , toggleStatus , toggleAll , clearCompleted , getActive , getCompleted};
+module.exports = {showTodo , addTodo , deleteTodo , toggleStatus , toggleAll , clearCompleted , getActive , getCompleted , alterTask};
 

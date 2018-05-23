@@ -199,6 +199,42 @@ function getCompleted(callback) {
 
 
 /*
+	@function alterTask(callback)
+	@description callback function update task
+	@param {callback object}
+*/
+function alterTask(taskId , text , callback) {
+	console.log("from model",taskId);
+	console.log("from model",text);
+	fs.readFile('./todo.json', 'utf8', function (err, data) {
+		if (err) throw err;
+		console.log("print data",data);
+		data=JSON.parse(data)
+		//function to iterate json array and update status
+		function changeDesc(id,text) {
+			console.log("funs",id);
+			//traversing array to delete
+	   	for (var i in data) {
+	     	if (data[i].id == id) {
+	     		data[i].todo = text.txt
+	        break; //Stop this loop, we found it!
+	     	}		
+   		}
+   		console.log("data after update",data);	
+   		console.log("updated",data);
+   	var obj = data;
+   	//now write updated array in file after updation
+		fs.writeFile('todo.json', JSON.stringify(obj), 'utf-8', function(err) {
+      if (err) res.status(400).send(err)
+	  });
+   	}   	
+   	changeDesc (taskId,text);
+		callback(text);
+	});
+}
+
+
+/*
 	@function write(obj)
 	@description function to write to JSON file
 	@param {callback object}
@@ -215,4 +251,4 @@ function write(obj) {
 /**
   @description exporting objects to be used in other files
 */
-module.exports = {showTodo , addTodo , deleteTodo , toggleStatus , toggleAll , clearCompleted , getActive , getCompleted};
+module.exports = {showTodo , addTodo , deleteTodo , toggleStatus , toggleAll , clearCompleted , getActive , getCompleted , alterTask};

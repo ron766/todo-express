@@ -62,7 +62,7 @@
 		      </div>
 
 		      <!-- div class main input row -->
-		      <div class="row showAll">
+		      <div class="row">
 		        <div class="col-sm-8 col-sm-offset-2">
 		          <div class="input-group input-group-lg">
 		            <span class="input-group-btn">
@@ -91,7 +91,7 @@
 		      <br>
 
 					<!-- todo row -->
-		      <div class="row checksRow">
+		      <div class="row checksRow showAll">
 		        <% for(var i=0; i < JSON.parse(todoFileTxtShow).length; i++) { %>
 					    <div class='col-sm-8 col-sm-offset-2'>
 					    <!-- to show if status is completed -->
@@ -101,7 +101,7 @@
 						     		<input class='toggle' type='checkbox' id='checkbox' checked> 
 						     	</span> 
 							    <form>  
-							     	<input class='edit form-control input-lg complete' id='ckecklist' value="<%= JSON.parse(todoFileTxtShow)[i].todo %>" data-id="<%= JSON.parse(todoFileTxtShow)[i].id %>">
+							     	<input readonly class='edit form-control input-lg complete' id='ckecklist' value="<%= JSON.parse(todoFileTxtShow)[i].todo %>" data-id="<%= JSON.parse(todoFileTxtShow)[i].id %>">
 							   	</form> 
 							   	<span class='input-group-btn'> 
 							   		<button class='btn btn-default btn-lg destroy'>

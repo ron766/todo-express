@@ -202,7 +202,7 @@ $(document).on('click', '.activeBtn', function() {
     success: function(msg) {
       $('.showActive').html('');
       for(var i=0; i < msg.length; i++) {
-        $(".checksRowActive").append("<div class='col-sm-8 col-sm-offset-2'><div class='input-group input-group-lg'><span class='input-group-addon'><input class='toggle' type='checkbox' id='checkbox'> </span> <form>  <input class='edit form-control input-lg' id='ckecklist' value="+JSON.stringify(msg[i].todo)+">  </form> <span class='input-group-btn'> <button class='btn btn-default btn-lg destroy'><i class='glyphicon glyphicon-remove'></i> </button> </span> </div> </div>");
+        $(".checksRowActive").append("<div class='col-sm-8 col-sm-offset-2'><div class='input-group input-group-lg'><span class='input-group-addon'><input class='toggle' type='checkbox' id='checkbox'> </span> <form>  <input class='edit form-control input-lg' id='ckecklist' value="+JSON.stringify(msg[i].todo)+">  </form> <span class='input-group-btn'> <button class='btn btn-default btn-lg destroy'><i class='glyphicon glyphicon-remove'></i> </button> </span> </div> </div> <br>");
       }
     },
     error: function (err) {
@@ -228,7 +228,7 @@ $(document).on('click', '.completedBtn', function() {
       console.log(msg); 
       $('.showCompleted').html('');
       for(var i=0; i < msg.length; i++) {
-        $(".showCompleted").append("<div class='col-sm-8 col-sm-offset-2'><div class='input-group input-group-lg'><span class='input-group-addon'><input class='toggle' type='checkbox' id='checkbox'> </span> <form>  <input class='edit form-control input-lg complete' id='ckecklist' value="+JSON.stringify(msg[i].todo)+">  </form> <span class='input-group-btn'> <button class='btn btn-default btn-lg destroy'><i class='glyphicon glyphicon-remove'></i> </button> </span> </div> </div>");
+        $(".showCompleted").append("<div class='col-sm-8 col-sm-offset-2'><div class='input-group input-group-lg'><span class='input-group-addon'><input class='toggle' type='checkbox' id='checkbox'> </span> <form>  <input class='edit form-control input-lg complete' id='ckecklist' value="+JSON.stringify(msg[i].todo)+" readonly>  </form> <span class='input-group-btn'> <button class='btn btn-default btn-lg destroy'><i class='glyphicon glyphicon-remove'></i> </button> </span> </div> </div> <br>");
       }
     },
     error: function (err) {
@@ -248,4 +248,32 @@ $(document).on('click', '.allBtn', function() {
   $('.checksRow').removeClass('disp');
   $('.checksRowActive').html(''); 
   $('.showCompleted').html('');
+});
+
+
+/**
+  @function on('keypress', '.allBtn', function() {}
+  @description to edit existing task
+*/
+$(document).on('keypress', '#ckecklist', function(e) {
+  if(e.which == 13) {
+    var textId = $(this).attr('data-id');
+    var text = $(this).val();
+    console.log(textId,text);
+
+    var self=this;
+    $.ajax({
+      url: '/updateTask/'+textId,
+      type: 'PUT',    
+      data: {txt:text},
+      success: function(result) {
+        // console.log("data sent to server for status update",result);
+        
+        // $(this).text(result.txt);
+      },
+      error: function (err) {
+        console.log(err);
+      }
+    });
+  }
 });
