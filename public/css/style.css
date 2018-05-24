@@ -1,18 +1,43 @@
+/**
+  @author Rohan Patil
+  @description css file
+*/
+
+/**
+  @description body detailing
+*/
 @import url(http://fonts.googleapis.com/css?family=Quattrocento:700);
 body {
   background-color:#f8f8f8;
   font-family: 'Quattrocento', serif;
 }
+
+/**
+  @description body detailing
+*/
 .selected {
   border:1px solid #ddd;
 }
 
+/**
+  @description display property
+*/
 .disp {
   display: none;
 }
 
+/**
+  @description input detailing
+*/
 .complete {
 	text-decoration: line-through;
   background-color: #F08080 !important; 
+}
+
+/**
+  @description <a> detailing
+*/
+.aactive {
+	text-decoration: underline;
 }
 

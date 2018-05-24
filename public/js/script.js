@@ -127,17 +127,18 @@ $(document).on('change', '#checkbox', function() {
    	//ajax call to send data to server for status update
    	var self=this;
    	$.ajax({
-            url: '/markdone',
-            type: 'PUT',    
-            data: {id:markText},
-            success: function(result) {
-              console.log("data sent to server for status update");
-              $(self).parent().next().children().addClass('complete');
-            },
-            error: function (err) {
-	   					console.log(err);
-	   				}
-        });
+      url: '/markdone',
+      type: 'PUT',    
+      data: {id:markText},
+      success: function(result) {
+        console.log("data sent to server for status update");
+        $(self).parent().next().children().addClass('complete');
+        $(self).parent().next().children().attr('readonly', 'true');
+      },
+      error: function (err) {
+					console.log(err);
+				}
+    });
   }
  	else {
     markText = $(this).parent().next().children().attr('data-id');
@@ -145,17 +146,17 @@ $(document).on('change', '#checkbox', function() {
     //ajax call to send data to server for status update
     var self=this;
     $.ajax({
-            url: '/markdone',
-            type: 'PUT',    
-            data: {id:markText},
-            success: function(result) {
-              console.log("data sent to server for status update");
-              $(self).parent().next().children().removeClass('complete');
-            },
-            error: function (err) {
-              console.log(err);
-            }
-        });
+      url: '/markdone',
+      type: 'PUT',    
+      data: {id:markText},
+      success: function(result) {
+        console.log("data sent to server for status update");
+        $(self).parent().next().children().removeClass('complete');
+      },
+      error: function (err) {
+        console.log(err);
+      }
+    });
  	}
 });
 
@@ -170,10 +171,6 @@ $(document).on('click', '#clear-completed', function() {
       type: 'delete',
       url: '/clearCompleted',
       success: function(msg) {
-        debugger;
-        console.log($(self)); 
-
-        console.log(JSON.stringify(msg)); 
         $(self).closest(".input-group-lg").remove();
       },
       error: function (err) {
@@ -195,6 +192,11 @@ $(document).on('click', '.activeBtn', function() {
   $('.showCompleted').addClass('disp');
   $('.checksRow').addClass('disp');
   $('.showCompleted').html('');
+  /*active class*/
+  $('.activeBtn').addClass('aactive');
+  $('.allBtn').removeClass('aactive');
+  $('.completedBtn').removeClass('aactive');
+  //ajax call
   $.ajax({
     type: 'GET',
     contentType: 'application/json',
@@ -220,6 +222,10 @@ $(document).on('click', '.completedBtn', function() {
   $('.showActive').addClass('disp');
   $('.showAll').addClass('disp');
   $('.checksRowActive').html('');
+  /*active class*/
+  $('.completedBtn').addClass('aactive');
+  $('.allBtn').removeClass('aactive');
+  $('.activeBtn').removeClass('aactive');
   $.ajax({
     type: 'GET',
     contentType: 'application/json',
@@ -228,8 +234,10 @@ $(document).on('click', '.completedBtn', function() {
       console.log(msg); 
       $('.showCompleted').html('');
       for(var i=0; i < msg.length; i++) {
-        $(".showCompleted").append("<div class='col-sm-8 col-sm-offset-2'><div class='input-group input-group-lg'><span class='input-group-addon'><input class='toggle' type='checkbox' id='checkbox'> </span> <form>  <input class='edit form-control input-lg complete' id='ckecklist' value="+JSON.stringify(msg[i].todo)+" readonly>  </form> <span class='input-group-btn'> <button class='btn btn-default btn-lg destroy'><i class='glyphicon glyphicon-remove'></i> </button> </span> </div> </div> <br>");
+        $(".showCompleted").append("<div class='col-sm-8 col-sm-offset-2'><div class='input-group input-group-lg'><span class='input-group-addon'><input class='toggle' type='checkbox' id='checkbox' checked> </span> <form>  <input class='edit form-control input-lg complete' id='ckecklist' value="+JSON.stringify(msg[i].todo)+" readonly>  </form> <span class='input-group-btn'> <button class='btn btn-default btn-lg destroy'><i class='glyphicon glyphicon-remove'></i> </button> </span> </div> </div> <br>");
       }
+
+      
     },
     error: function (err) {
       console.log(err);
@@ -241,13 +249,26 @@ $(document).on('click', '.completedBtn', function() {
   @description to show all tasks
 */
 $(document).on('click', '.allBtn', function() {
-  debugger;
   $('.showAll').removeClass('disp');
   $('.showActive').addClass('disp');
   $('.showCompleted').addClass('disp');
   $('.checksRow').removeClass('disp');
   $('.checksRowActive').html(''); 
   $('.showCompleted').html('');
+  /*active class*/
+  $('.activeBtn').removeClass('aactive');
+  $('.allBtn').addClass('aactive');
+  $('.completedBtn').removeClass('aactive');
+
+  // if($('#ckecklist').not('complete')) {
+  //       $(checkbox).prop('checked', false);
+  //     } 
+  //     if($('#ckecklist').hasClass('complete')) {
+  //       $(checkbox).prop('checked', true);
+      
+  //     }
+
+
 });
 
 
@@ -255,8 +276,9 @@ $(document).on('click', '.allBtn', function() {
   @function on('keypress', '.allBtn', function() {}
   @description to edit existing task
 */
-$(document).on('keypress', '#ckecklist', function(e) {
-  if(e.which == 13) {
+$(document).on('focusout', '#ckecklist', function(e) {
+
+
     var textId = $(this).attr('data-id');
     var text = $(this).val();
     console.log(textId,text);
@@ -267,13 +289,13 @@ $(document).on('keypress', '#ckecklist', function(e) {
       type: 'PUT',    
       data: {txt:text},
       success: function(result) {
-        // console.log("data sent to server for status update",result);
+        debugger;
+        console.log("data sent to server for status update",result);
         
-        // $(this).text(result.txt);
+        $(this).text(result.txt);
       },
       error: function (err) {
         console.log(err);
       }
     });
-  }
 });

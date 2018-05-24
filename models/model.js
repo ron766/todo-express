@@ -15,11 +15,17 @@ var arrayOfObjects;
 	@param {callback object}
 */
 function showTodo(callback) {
-	fs.readFile('./todo.json', 'utf8', function (err, data) {
-	  if (err) throw err;
-	  // obj = JSON.parse(data);
-	  callback(data)
-	});
+	// fs.readFile('./todo.json', 'utf8', function (err, data) {
+	//   if (err) throw err;
+	//   callback(data)
+	// });
+	return new Promise(function(resolve, reject){
+    fs.readFile('./todo.json', 'utf8', function (err, data) {
+		  if (err) reject(err);
+		  //callback(data)
+        resolve(data);
+		});
+  })   
 }
 
 /*

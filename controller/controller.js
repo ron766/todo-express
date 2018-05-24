@@ -9,15 +9,24 @@ var model = require('./../models/model');
 	@description function to get data from model show existing tasks on server load
 	@param {server object request , server object response}
 */
-function showTodo(req,res) {
-	// model.showTodo();	
-	model.showTodo(function(data) {
+// function showTodo(req,res) {
+// 	model.showTodo();	
+// 	model.showTodo(function(data) {
+// 		res.render('todo.html' , {
+// 		welcomeMessage: 'To-Do Checklist App' ,
+// 		todoFileTxtShow: data
+// 		});
+// 	});
+// }
+function showTodo(req,res){
+	model.showTodo(req).then(function(data){
 		res.render('todo.html' , {
-		welcomeMessage: 'To-Do Checklist App' ,
-		todoFileTxtShow: data
-		});
-	});
+			welcomeMessage: 'To-Do Checklist App' ,
+			todoFileTxtShow: data
+		});//render close
+	},function(err){if(err)throw err;})
 }
+
 
 /*
 	@function addTodo(req,res)
@@ -135,7 +144,7 @@ function alterTask(req,res) {
 	var taskId = req.params.textId;
 	console.log(text);
 	model.alterTask(taskId , text , function(data){
-			res.send(text);
+			res.send(text); 
 		}); 
 }
 
