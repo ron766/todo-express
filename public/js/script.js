@@ -104,6 +104,7 @@ $(document).on('click', '#toggle-none', function() {
       success: function(result) {
         console.log("data sent to server for status update");
         $('body #ckecklist').removeClass('complete');
+        $('body #ckecklist').attr("readonly",false)
         $(".toggle").prop("checked" , false);
         clicked = !clicked;
       },
@@ -152,6 +153,7 @@ $(document).on('change', '#checkbox', function() {
       success: function(result) {
         console.log("data sent to server for status update");
         $(self).parent().next().children().removeClass('complete');
+        $(self).parent().next().children().attr('readonly', false);
       },
       error: function (err) {
         console.log(err);

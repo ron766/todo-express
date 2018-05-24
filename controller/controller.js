@@ -9,22 +9,16 @@ var model = require('./../models/model');
 	@description function to get data from model show existing tasks on server load
 	@param {server object request , server object response}
 */
-// function showTodo(req,res) {
-// 	model.showTodo();	
-// 	model.showTodo(function(data) {
-// 		res.render('todo.html' , {
-// 		welcomeMessage: 'To-Do Checklist App' ,
-// 		todoFileTxtShow: data
-// 		});
-// 	});
-// }
 function showTodo(req,res){
-	model.showTodo(req).then(function(data){
-		res.render('todo.html' , {
-			welcomeMessage: 'To-Do Checklist App' ,
-			todoFileTxtShow: data
-		});//render close
-	},function(err){if(err)throw err;})
+	model.showTodo(req).then(
+		function(data) {
+			res.render('todo.html' , {
+				welcomeMessage: 'To-Do Checklist App' ,
+				todoFileTxtShow: data
+			});//render close
+		},
+		function(err){if(err)throw err;}
+	)//then close
 }
 
 
@@ -36,16 +30,19 @@ function showTodo(req,res){
 */
 function addTodo(req,res) {
 	var task = req.body.data;
-	console.log('task from call', req.body);
 	if(task.data === "") {
 		throw err;
 	}
 	else {
-		model.addTodo(task , function(data){
-			res.send(data);
-		});
+		model.addTodo(task).then(
+			function(data) {
+				res.send(data);
+			},
+			function(err){if(err)throw err;}
+		)//then close
 	}
 }
+
 
 /*
 	@function deleteTodo(req,res)
@@ -53,13 +50,14 @@ function addTodo(req,res) {
 		array/file and get response and send it back to client
 	@param {server object request , server object response}
 */
-function deleteTodo(req,res) {
-	//refer global var obj for ref
+function deleteTodo(req,res){
 	var taskDestroy = req.body;
-	console.log("asfsfsfsf",taskDestroy);
-	model.deleteTodo(taskDestroy,function(data){
-			res.status(200).send("success");
-		});   
+	model.deleteTodo(taskDestroy).then(
+		function(data) {
+      res.send("success");
+		},
+		function(err){if(err)throw err;}
+	)//then close
 }
 
 
@@ -69,12 +67,21 @@ function deleteTodo(req,res) {
 		array/file and get response and send it back to client
 	@param {server object request , server object response}
 */
+// function toggleStatus(req,res) {
+// 	var updateStatus = req.body;
+// 	console.log(updateStatus);
+// 	model.toggleStatus(updateStatus , function(data){
+// 			res.status(200).send("Status updated");
+// 		}); 
+// }
 function toggleStatus(req,res) {
 	var updateStatus = req.body;
-	console.log(updateStatus);
-	model.toggleStatus(updateStatus , function(data){
-			res.status(200).send("Status updated");
-		}); 
+	model.toggleStatus(updateStatus).then(
+		function(data) {
+      res.send("success");
+		},
+		function(err){if(err)throw err;}
+	)//then close
 }
 
 
@@ -84,25 +91,30 @@ function toggleStatus(req,res) {
 		array/file and get response and send it back to client
 	@param {server object request , server object response}
 */
-function toggleAll(req,res) {
+function toggleAll(req,res){
 	var condition = req.query
-	console.log(condition)
-	model.toggleAll(condition.s , function(data){
-			res.status(200).send("Status updated");
-		}); 
+	model.toggleAll(condition).then(
+		function(data) {
+      res.send("success");
+		},
+		function(err){if(err)throw err;}
+	)//then close
 }
 
 
 /*
-	@function toggleAll(req,res)
+	@function clearCompleted(req,res)
 	@description function to get data from client, pass it to model to update to JSON 
 		array/file and get response and send it back to client
 	@param {server object request , server object response}
 */
-function clearCompleted(req,res) {
-	model.clearCompleted(function(data){
-			res.status(200).send("Deleted");
-		});
+function clearCompleted(req,res){
+	model.clearCompleted().then(
+		function(data) {
+      res.send("success");
+		},
+		function(err){if(err)throw err;}
+	)//then close
 }
 
 
@@ -111,11 +123,13 @@ function clearCompleted(req,res) {
 	@description function to get active tasks
 	@param {server object request , server object response}
 */
-function getActive(req,res) {
-	model.getActive(function(data){
-		console.log(data);
-			res.status(200).send(data);
-		});
+function getActive(req,res){
+	model.getActive().then(
+		function(data) {
+      res.send(data);
+		},
+		function(err){if(err)throw err;}
+	)//then close
 }
 
 
@@ -124,11 +138,13 @@ function getActive(req,res) {
 	@description function to get completed tasks
 	@param {server object request , server object response}
 */
-function getCompleted(req,res) {
-	model.getCompleted(function(data){
-		console.log(data);
-			res.status(200).send(data);
-		});
+function getCompleted(req,res){
+	model.getCompleted().then(
+		function(data) {
+      res.send(data);
+		},
+		function(err){if(err)throw err;}
+	)//then close
 }
 
 
@@ -138,14 +154,15 @@ function getCompleted(req,res) {
 		array/file and get response and send it back to client
 	@param {server object request , server object response}
 */
-function alterTask(req,res) {
+function alterTask(req,res){
 	var text = req.body;
-	console.log(taskId);
 	var taskId = req.params.textId;
-	console.log(text);
-	model.alterTask(taskId , text , function(data){
-			res.send(text); 
-		}); 
+	model.alterTask(taskId , text).then(
+		function(data) {
+      res.send("success");
+		},
+		function(err){if(err)throw err;}
+	)//then close
 }
 
 
