@@ -33,6 +33,7 @@ $("#addToDo").on("click", function() {
   }
 });
 
+
 /**
   @function $('.clearTextBtn').on('click') - clear button
   @description to clear input text box
@@ -41,6 +42,7 @@ $('.clearTextBtn').on('click', () => {
   debugger;
   $('#new-todo').val("");
 });
+
 
 /**
   @function on('click', '.destroy', function() {}
@@ -68,6 +70,7 @@ $(document).on('click', '.destroy', function() {
 	});
 });
 
+
 /**
   @function on('click', '#toggle-all', function() {}
   @description to mark tasks complete
@@ -76,20 +79,21 @@ var clicked = false;
 $(document).on('click', '#toggle-all', function() {
 	debugger;
     $.ajax({
-            url: '/markall?s='+true,
-            type: 'PUT',    
-            success: function(result) {
-              debugger;
-              console.log("data sent to server for status update");
-              $('body #ckecklist').addClass('complete');
-              $(".toggle").prop("checked", !clicked);
-              clicked = !clicked;
-            },
-            error: function (err) {
-              console.log(err);
-            }
-        });
+      url: '/markall?s='+true,
+      type: 'PUT',    
+      success: function(result) {
+        debugger;
+        console.log("data sent to server for status update");
+        $('body #ckecklist').addClass('complete');
+        $(".toggle").prop("checked", !clicked);
+        clicked = !clicked;
+      },
+      error: function (err) {
+        console.log(err);
+      }
+    });
   });
+
 
 /**
   @function on('click', '#toggle-none', function() {}
@@ -115,6 +119,7 @@ $(document).on('click', '#toggle-none', function() {
   }
 });
 
+
 /**
   @function on('click', '#checkbox', function() {}
   @description to mark task completed by checkbox through ajax call
@@ -132,6 +137,7 @@ $(document).on('change', '#checkbox', function() {
       type: 'PUT',    
       data: {id:markText},
       success: function(result) {
+        debugger;
         console.log("data sent to server for status update");
         $(self).parent().next().children().addClass('complete');
         $(self).parent().next().children().attr('readonly', 'true');
@@ -161,6 +167,7 @@ $(document).on('change', '#checkbox', function() {
     });
  	}
 });
+
 
 /**
   @function on('click', '#checkbox', function() {}
@@ -214,6 +221,8 @@ $(document).on('click', '.activeBtn', function() {
     }
   });
 });
+
+
 /**
   @function on('click', '.completedBtn', function() {}
   @description to show completed tasks
@@ -237,15 +246,15 @@ $(document).on('click', '.completedBtn', function() {
       $('.showCompleted').html('');
       for(var i=0; i < msg.length; i++) {
         $(".showCompleted").append("<div class='col-sm-8 col-sm-offset-2'><div class='input-group input-group-lg'><span class='input-group-addon'><input class='toggle' type='checkbox' id='checkbox' checked> </span> <form>  <input class='edit form-control input-lg complete' id='ckecklist' value="+JSON.stringify(msg[i].todo)+" readonly>  </form> <span class='input-group-btn'> <button class='btn btn-default btn-lg destroy'><i class='glyphicon glyphicon-remove'></i> </button> </span> </div> </div> <br>");
-      }
-
-      
+      }  
     },
     error: function (err) {
       console.log(err);
     }
   });
 });
+
+
 /**
   @function on('click', '.allBtn', function() {}
   @description to show all tasks
@@ -261,43 +270,30 @@ $(document).on('click', '.allBtn', function() {
   $('.activeBtn').removeClass('aactive');
   $('.allBtn').addClass('aactive');
   $('.completedBtn').removeClass('aactive');
-
-  // if($('#ckecklist').not('complete')) {
-  //       $(checkbox).prop('checked', false);
-  //     } 
-  //     if($('#ckecklist').hasClass('complete')) {
-  //       $(checkbox).prop('checked', true);
-      
-  //     }
-
-
 });
 
 
 /**
-  @function on('keypress', '.allBtn', function() {}
+  @function on('focusout', '#ckecklist', function() {}
   @description to edit existing task
 */
 $(document).on('focusout', '#ckecklist', function(e) {
+  var textId = $(this).attr('data-id');
+  var text = $(this).val();
+  console.log(textId,text);
 
-
-    var textId = $(this).attr('data-id');
-    var text = $(this).val();
-    console.log(textId,text);
-
-    var self=this;
-    $.ajax({
-      url: '/updateTask/'+textId,
-      type: 'PUT',    
-      data: {txt:text},
-      success: function(result) {
-        debugger;
-        console.log("data sent to server for status update",result);
-        
-        $(this).text(result.txt);
-      },
-      error: function (err) {
-        console.log(err);
-      }
-    });
+  var self=this;
+  $.ajax({
+    url: '/updateTask/'+textId,
+    type: 'PUT',    
+    data: {txt:text},
+    success: function(result) {
+      debugger;
+      console.log("data sent to server for status update",result);
+      $(this).text(result.txt);
+    },
+    error: function (err) {
+      console.log(err);
+    }
+  });
 });

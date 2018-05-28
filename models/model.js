@@ -44,7 +44,7 @@ function addTodo(task , callback) {
 			arrayOfObjects.push(tmpArrayOfObjects);
 			// res.send("success");
 			write(arrayOfObjects);
-      resolve(data);
+      resolve(tmpArrayOfObjects);
 		});
   })   
 }
@@ -68,7 +68,7 @@ function deleteTodo(taskDestroy , callback) {
 			console.log("from delete",todoArrayAfterDelete);
 			obj = todoArrayAfterDelete;
 			write(obj);
-      resolve(data);
+      resolve(taskDestroy);
 		});
   })   
 }
@@ -129,7 +129,6 @@ function toggleAll(condition , callback) {
 				}
 	    	// return item.activeStatus = false;                   
 			});
-			console.log("markall",data);
 			var obj = data;
 			write(obj);
       resolve(data);
@@ -153,10 +152,9 @@ function clearCompleted(callback) {
 	    //success
 	    data = JSON.parse(data);
 			var todoArrayAfterDelete = remove(data, false);
-			console.log("after clear",todoArrayAfterDelete);
 			var obj = todoArrayAfterDelete;
 			write(obj);
-      resolve(data);
+      resolve(obj);
 		});
   })   
 }
@@ -210,6 +208,7 @@ function getCompleted(callback) {
 	@param {callback object}
 */
 function alterTask(taskId , text , callback) {
+	console.log("model",taskId);
 	return new Promise(function(resolve, reject) {
     fs.readFile('./todo.json', 'utf8', function (err, data) {
 	    if (err) reject(err);
@@ -225,11 +224,11 @@ function alterTask(taskId , text , callback) {
 		     	}		
 	   		}
 	   		console.log("data after update",data);	
-	   	var obj = data;
-	   	//now write updated array in file after updation
-			fs.writeFile('todo.json', JSON.stringify(obj), 'utf-8', function(err) {
-	      if (err) res.status(400).send(err)
-		  });
+		   	var obj = data;
+		   	//now write updated array in file after updation
+				fs.writeFile('todo.json', JSON.stringify(obj), 'utf-8', function(err) {
+		      if (err) res.status(400).send(err)
+			  });
 	   	}   	
 	   	changeDesc (taskId,text);
       resolve(text);
@@ -255,3 +254,8 @@ function write(obj) {
   @description exporting objects to be used in other files
 */
 module.exports = {showTodo , addTodo , deleteTodo , toggleStatus , toggleAll , clearCompleted , getActive , getCompleted , alterTask};
+
+
+
+
+
