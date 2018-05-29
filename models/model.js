@@ -17,11 +17,19 @@ var arrayOfObjects;
 function showTodo(callback) {
 	console.log("env",process.env.NODE_ENV);
 	return new Promise(function(resolve, reject){
-    fs.readFile(dev, 'utf8', function (err, data) {
-		  if (err) reject(err);
-		  //success
-      resolve(data);
-		});
+		//mongo
+		MongoClient.connect("mongodb://localhost:27017/todoDB", function (err, client) {
+    	if(err) throw err;
+     	//success
+     	var db = client.db('todoDB');
+     	db.collection('todoTB', function (err, collection) {
+       	collection.find().toArray(function(err, items) {
+          if(err) throw err;    
+          console.log(items);  
+          resolve(items);          
+      	});
+    	});
+		});//mongo end
   })  
 }
 
@@ -32,22 +40,25 @@ function showTodo(callback) {
 */
 function addTodo(task , callback) {
 	return new Promise(function(resolve, reject) {
-    fs.readFile(dev, 'utf8', function (err, data) {
-		  if (err) reject(err);
-		  //success
-		  timestamp = new Date().getTime();
-		  var arrayOfObjects = JSON.parse(data);
-		  var tmpArrayOfObjects = {
-			  todo: task , 
-			  id: timestamp,
-			  activeStatus: true
-			};
-			arrayOfObjects.push(tmpArrayOfObjects);
-			// res.send("success");
-			write(arrayOfObjects);
-      resolve(tmpArrayOfObjects);
-		});
-  })   
+		//mongo
+		MongoClient.connect("mongodb://localhost:27017/todoDB", function (err, client) {
+    	if(err) throw err;
+     	//success
+     	var db = client.db('todoDB');
+     	db.collection('todoTB', function (err, collection) {
+     		timestamp = new Date().getTime();
+			  // var arrayOfObjects = JSON.parse(data);
+			  var tmpArrayOfObjects = {
+				  todo: task , 
+				  id: timestamp,
+				  activeStatus: true
+				};
+				// arrayOfObjects.push(tmpArrayOfObjects);
+				collection.insert({ id: timestamp, todo: task, activeStatus: true });
+				resolve(tmpArrayOfObjects);
+    	});
+		});//mongo end
+  })//promise end   
 }
 
 /*
@@ -56,21 +67,24 @@ function addTodo(task , callback) {
 	@param {callback object}
 */
 function deleteTodo(taskDestroy , callback) {
+	console.log("cnt",taskDestroy.id)
 	//to remove element
   function remove(array, element) {
     return array.filter(e => e.id !== element);
 	}
 	return new Promise(function(resolve, reject) {
-    fs.readFile(dev, 'utf8', function (err, data) {
-	    if (err) reject(err);
-	    //success
-	    var todoArray = JSON.parse(data);
-			var todoArrayAfterDelete = remove(todoArray, JSON.parse(taskDestroy.id));
-			console.log("from delete",todoArrayAfterDelete);
-			obj = todoArrayAfterDelete;
-			write(obj);
-      resolve(taskDestroy);
-		});
+		//mongo
+		MongoClient.connect("mongodb://localhost:27017/todoDB", function (err, client) {
+    	if(err) throw err;
+     	//success
+     	var db = client.db('todoDB');
+     	db.collection('todoTB', function (err, collection) {
+     		collection.deleteOne({id:taskDestroy.id} , {w:1} , function(err, result) {
+          if(err) throw err;          
+          console.log('Document Removed Successfully');
+        });
+     	});
+    });
   })   
 }
 
@@ -197,6 +211,7 @@ function getCompleted(callback) {
 	    //success
 	    data = JSON.parse(data);
 	 		var completedArray = remove(data, true);
+	 		console.log("mod",completedArray);
       resolve(completedArray);
 		});
   })   

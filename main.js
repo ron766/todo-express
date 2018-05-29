@@ -16,6 +16,8 @@ const routes = require('./routes/routes');
 //PORT
 const port = process.env.PORT || 3000;
 var urlencodedParser = bodyParser.urlencoded({ extended: true });
+//mongo
+MongoClient = require('mongodb').MongoClient;
 
 /**
   @description creating express object in app
@@ -49,18 +51,19 @@ app.use(express.static(__dirname+'/public'))
 */
 switch(process.env.NODE_ENV) {
   case 'development':
-    app.use(require('./routes/routes'));
     dev = './todo.json';
     break;
 
-  case 'testing':
-    app.use(require('./routes/routes'));
+  case 'testing': 
     dev = './testTodo.json';
     break;
 
   default: 
     console.log("Please provide proper envt");
 }
+
+//routes
+app.use(require('./routes/routes'));
 
 
 /**

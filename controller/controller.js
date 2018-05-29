@@ -147,6 +147,7 @@ function getActive(req,res){
 function getCompleted(req,res){
 	model.getCompleted().then(
 		function(data) {
+			console.log("cnt",data);
       res.send(data);
 		},
 		function(err){if(err)throw err;}
