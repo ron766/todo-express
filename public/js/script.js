@@ -10,7 +10,7 @@ var newTodo;
 */
 $("#addToDo").on("click", function() {
   $('.checksRow').removeClass('disp');
-  newTodo = { data: $('#new-todo').val()}
+  newTodo = { data: $('#new-todo').val().trim()}
   if (newTodo.data === "") {
   	alert("Task cannot be blank");
   }

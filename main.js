@@ -45,9 +45,23 @@ app.set('views',__dirname+'/views');
 app.use(express.static(__dirname+'/public'))
 
 /**
-  @description route path
+  @description route path switching on environment (development/testing)
 */
-app.use(require('./routes/routes'));
+switch(process.env.NODE_ENV) {
+  case 'development':
+    app.use(require('./routes/routes'));
+    dev = './todo.json';
+    break;
+
+  case 'testing':
+    app.use(require('./routes/routes'));
+    dev = './testTodo.json';
+    break;
+
+  default: 
+    console.log("Please provide proper envt");
+}
+
 
 /**
   @description listening on port & displaying the same

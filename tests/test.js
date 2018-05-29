@@ -14,50 +14,49 @@ var {app} = require('../main.js');
 */
 
 
-
 /*
 	@function describe('ADD TASKS')
 	@description to test addTodo function
 */
-// describe('ADD TASKS',() => {
-// 	//if input is right
-// 	it('With valid input',(done) => {
-// 		console.log(expect)
-// 		var data ="demo";
-//     request(app)
-// 	    .post('/addtask')
-// 	    .send({data})
-// 	    .expect(200)
-// 	    .expect((res) => {
-// 	    	expect(res.body.todo).toBe(data);
-// 	    })
-// 	    .end(done);
-//   });
-//   //if input is wrong
-//   it('With empty input',(done) => {
-// 		var data ="";
-//     request(app)
-// 	    .post('/addtask')
-// 	    .send({data})
-// 	    .expect(422)
-// 	    .expect((res) => {
-// 	    	expect(res.body).toBe(res.body);
-// 	    })
-// 	    .end(done);
-//   });
-//   //if input is blank space
-//   it('With blank space',(done) => {
-// 		var data =" ";
-//     request(app)
-// 	    .post('/addtask')
-// 	    .send({data})
-// 	    .expect(422)
-// 	    .expect((res) => {
-// 	    	expect(res.body).toBe(res.body);
-// 	    })
-// 	    .end(done);
-//   });
-// })
+describe('ADD TASKS',() => {
+	//if input is right
+	it('With valid input',(done) => {
+		console.log(expect)
+		var data ="demo";
+    request(app)
+	    .post('/addtask')
+	    .send({data})
+	    .expect(200)
+	    .expect((res) => {
+	    	expect(res.body.todo).toBe(data);
+	    })
+	    .end(done);
+  });
+  //if input is wrong
+  // it('With empty input',(done) => {
+		// var data ="";
+  //   request(app)
+	 //    .post('/addtask')
+	 //    .send({data})
+	 //    .expect(422)
+	 //    .expect((res) => {
+	 //    	expect(res.body).toBe(res.body);
+	 //    })
+	 //    .end(done);
+  // });
+  // //if input is blank space
+  // it('With blank space',(done) => {
+		// var data =" ";
+  //   request(app)
+	 //    .post('/addtask')
+	 //    .send({data})
+	 //    .expect(422)
+	 //    .expect((res) => {
+	 //    	expect(res.body).toBe(res.body);
+	 //    })
+	 //    .end(done);
+  // });
+})
 
 /*
 	@function describe('DELETE TASKS')
@@ -202,18 +201,18 @@ var {app} = require('../main.js');
 	@function describe('UPDATE TASK')
 	@description to update task
 */
-describe('UPDATE TASK',() => {
-	it('With valid input',(done) => {
-		var textId = 1527518964692;
-		var text = "mm"
-    request(app)
-	    .put('/updateTask/'+textId)
-	    .send({txt:text})
-	    .expect(200)
-	    .expect((res) => {
-	    	console.log("test",res.body);
-	    	expect(res.body.txt).toBe(text);
-	    })
-	    .end(done);
-  });
-});
+// describe('UPDATE TASK',() => {
+// 	it('With valid input',(done) => {
+// 		var textId = 1527518964692;
+// 		var text = "mm"
+//     request(app)
+// 	    .put('/updateTask/'+textId)
+// 	    .send({txt:text})
+// 	    .expect(200)
+// 	    .expect((res) => {
+// 	    	console.log("test",res.body);
+// 	    	expect(res.body.txt).toBe(text);
+// 	    })
+// 	    .end(done);
+//   });
+// });

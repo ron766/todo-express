@@ -15,13 +15,14 @@ var arrayOfObjects;
 	@param {callback object}
 */
 function showTodo(callback) {
+	console.log("env",process.env.NODE_ENV);
 	return new Promise(function(resolve, reject){
-    fs.readFile('./todo.json', 'utf8', function (err, data) {
+    fs.readFile(dev, 'utf8', function (err, data) {
 		  if (err) reject(err);
-		  //callback(data)
-        resolve(data);
+		  //success
+      resolve(data);
 		});
-  })   
+  })  
 }
 
 /*
@@ -31,7 +32,7 @@ function showTodo(callback) {
 */
 function addTodo(task , callback) {
 	return new Promise(function(resolve, reject) {
-    fs.readFile('./todo.json', 'utf8', function (err, data) {
+    fs.readFile(dev, 'utf8', function (err, data) {
 		  if (err) reject(err);
 		  //success
 		  timestamp = new Date().getTime();
@@ -60,7 +61,7 @@ function deleteTodo(taskDestroy , callback) {
     return array.filter(e => e.id !== element);
 	}
 	return new Promise(function(resolve, reject) {
-    fs.readFile('./todo.json', 'utf8', function (err, data) {
+    fs.readFile(dev, 'utf8', function (err, data) {
 	    if (err) reject(err);
 	    //success
 	    var todoArray = JSON.parse(data);
@@ -80,7 +81,7 @@ function deleteTodo(taskDestroy , callback) {
 */
 function toggleStatus(updateStatus , callback) {
 	return new Promise(function(resolve, reject) {
-    fs.readFile('./todo.json', 'utf8', function (err, data) {
+    fs.readFile(dev, 'utf8', function (err, data) {
 	    if (err) reject(err);
 	    //success
 	    data=JSON.parse(data)
@@ -116,7 +117,7 @@ function toggleStatus(updateStatus , callback) {
 */
 function toggleAll(condition , callback) {
 	return new Promise(function(resolve, reject) {
-    fs.readFile('./todo.json', 'utf8', function (err, data) {
+    fs.readFile(dev, 'utf8', function (err, data) {
 	    if (err) reject(err);
 	    //success
 			data=JSON.parse(data);
@@ -147,7 +148,7 @@ function clearCompleted(callback) {
     return array.filter(e => e.activeStatus !== element);
 	}
 	return new Promise(function(resolve, reject) {
-    fs.readFile('./todo.json', 'utf8', function (err, data) {
+    fs.readFile(dev, 'utf8', function (err, data) {
 	    if (err) reject(err);
 	    //success
 	    data = JSON.parse(data);
@@ -170,7 +171,7 @@ function getActive(callback) {
     return array.filter(e => e.activeStatus !== element);
 	}  
 	return new Promise(function(resolve, reject) {
-    fs.readFile('./todo.json', 'utf8', function (err, data) {
+    fs.readFile(dev, 'utf8', function (err, data) {
 	    if (err) reject(err);
 	    //success
 	    data = JSON.parse(data);
@@ -191,7 +192,7 @@ function getCompleted(callback) {
   	return array.filter(e => e.activeStatus !== element);
 	}
 	return new Promise(function(resolve, reject) {
-    fs.readFile('./todo.json', 'utf8', function (err, data) {
+    fs.readFile(dev, 'utf8', function (err, data) {
 	    if (err) reject(err);
 	    //success
 	    data = JSON.parse(data);
@@ -210,7 +211,7 @@ function getCompleted(callback) {
 function alterTask(taskId , text , callback) {
 	console.log("model",taskId);
 	return new Promise(function(resolve, reject) {
-    fs.readFile('./todo.json', 'utf8', function (err, data) {
+    fs.readFile(dev, 'utf8', function (err, data) {
 	    if (err) reject(err);
 	    //success
 	    data=JSON.parse(data)
@@ -226,7 +227,7 @@ function alterTask(taskId , text , callback) {
 	   		console.log("data after update",data);	
 		   	var obj = data;
 		   	//now write updated array in file after updation
-				fs.writeFile('todo.json', JSON.stringify(obj), 'utf-8', function(err) {
+				fs.writeFile(dev, JSON.stringify(obj), 'utf-8', function(err) {
 		      if (err) res.status(400).send(err)
 			  });
 	   	}   	
@@ -243,7 +244,7 @@ function alterTask(taskId , text , callback) {
 	@param {callback object}
 */
 function write(obj) {
-	fs.writeFile('todo.json', JSON.stringify(obj), 'utf-8', function(err) {
+	fs.writeFile(dev, JSON.stringify(obj), 'utf-8', function(err) {
       if (err) res.status(400).send(err)
       console.log("fresh array",obj);
   		

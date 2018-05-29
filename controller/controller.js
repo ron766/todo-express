@@ -76,13 +76,6 @@ function deleteTodo(req,res){
 		array/file and get response and send it back to client
 	@param {server object request , server object response}
 */
-// function toggleStatus(req,res) {
-// 	var updateStatus = req.body;
-// 	console.log(updateStatus);
-// 	model.toggleStatus(updateStatus , function(data){
-// 			res.status(200).send("Status updated");
-// 		}); 
-// }
 function toggleStatus(req,res) {
 	var updateStatus = req.body;
 	model.toggleStatus(updateStatus).then(
