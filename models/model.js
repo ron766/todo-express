@@ -9,6 +9,26 @@
 const fs = require('fs');
 var arrayOfObjects;
 
+//global db object
+var db;
+
+/*
+	@function mongo()
+	@description mongoDB connection function
+*/
+function mongo() {
+	return new Promise(function(resolve, reject){
+		const uri = 'mongodb://localhost:27017/todoDB'; 
+		MongoClient.connect(uri,{ useNewUrlParser: true }, function (err, client) {
+	  	if(err) throw err;
+	   	//success
+	   	db = client.db('todoDB');
+	   	// console.log(db);
+	   	return resolve(null);
+	  });
+	})
+}
+
 /*
 	@function showTodo(callback)
 	@description callback function read JSON file and sending back array
@@ -16,38 +36,34 @@ var arrayOfObjects;
 */
 function showTodo(callback) {
 	console.log("env",process.env.NODE_ENV);
-	return new Promise(function(resolve, reject){
-		//mongo
-		MongoClient.connect("mongodb://localhost:27017/todoDB", function (err, client) {
-    	if(err) throw err;
-     	//success
-     	var db = client.db('todoDB');
-     	db.collection('todoTB', function (err, collection) {
-       	collection.find().toArray(function(err, items) {
-          if(err) throw err;    
-          console.log(items);  
-          resolve(items);          
-      	});
-    	});
-		});//mongo end
-  })  
+	return new Promise(function(resolve, reject) {
+		mongo().then(function(){
+			db.collection('todoTB', function (err, collection) {
+		   	collection.find().toArray(function(err, items) {
+		      if(err) throw err; 
+		      //success     
+		      resolve(items);          
+		  	});
+		  });
+		})
+		.catch(function(err) {
+			console.log(err);
+		});
+  })//Promise  
 }
 
 /*
 	@function addTodo(callback)
-	@description callback function to read JSON file and write new task into JSON file
+	@description callback function to add task to db
 	@param {callback object}
 */
 function addTodo(task , callback) {
 	return new Promise(function(resolve, reject) {
 		//mongo
-		MongoClient.connect("mongodb://localhost:27017/todoDB", function (err, client) {
-    	if(err) throw err;
-     	//success
-     	var db = client.db('todoDB');
-     	db.collection('todoTB', function (err, collection) {
-     		timestamp = new Date().getTime();
-			  // var arrayOfObjects = JSON.parse(data);
+		mongo().then(function(){
+	   	db.collection('todoTB', function (err, collection) {
+				timestamp = new Date().getTime();
+		  	// var arrayOfObjects = JSON.parse(data);
 			  var tmpArrayOfObjects = {
 				  todo: task , 
 				  id: timestamp,
@@ -56,35 +72,37 @@ function addTodo(task , callback) {
 				// arrayOfObjects.push(tmpArrayOfObjects);
 				collection.insert({ id: timestamp, todo: task, activeStatus: true });
 				resolve(tmpArrayOfObjects);
-    	});
-		});//mongo end
+			});
+		})
+		.catch(function(err) {
+			console.log(err);
+		});
   })//promise end   
 }
 
 /*
 	@function deleteTodo(callback)
-	@description callback function to read JSON file and delete task from JSON file
+	@description callback function to delete a task from db
 	@param {callback object}
 */
 function deleteTodo(taskDestroy , callback) {
-	console.log("cnt",taskDestroy.id)
-	//to remove element
-  function remove(array, element) {
-    return array.filter(e => e.id !== element);
-	}
+	var id = parseFloat(taskDestroy.id);
 	return new Promise(function(resolve, reject) {
 		//mongo
-		MongoClient.connect("mongodb://localhost:27017/todoDB", function (err, client) {
-    	if(err) throw err;
-     	//success
-     	var db = client.db('todoDB');
-     	db.collection('todoTB', function (err, collection) {
-     		collection.deleteOne({id:taskDestroy.id} , {w:1} , function(err, result) {
-          if(err) throw err;          
-          console.log('Document Removed Successfully');
-        });
+		mongo().then(function(){
+			db.collection('todoTB', function (err, collection) {
+     		try {
+		     	collection.deleteOne({"id":id});
+		    }
+	     	catch(e) {
+	     		console.log(e);
+	     	}
+      	resolve(taskDestroy);
      	});
-    });
+		})
+		.catch(function(err) {
+			console.log(err);
+		});
   })   
 }
 
@@ -94,34 +112,25 @@ function deleteTodo(taskDestroy , callback) {
 	@param {callback object}
 */
 function toggleStatus(updateStatus , callback) {
+	var id = parseFloat(updateStatus.id);
+	var stat = JSON.parse(updateStatus.status);
 	return new Promise(function(resolve, reject) {
-    fs.readFile(dev, 'utf8', function (err, data) {
-	    if (err) reject(err);
-	    //success
-	    data=JSON.parse(data)
-			//function to iterate json array and update status
-			function changeDesc(id) {
-				//traversing array to delete
-		   	for (var i in data) {
-		     	if (data[i].id == updateStatus.id) {
-		     		if(data[i].activeStatus == false) {
-		     			data[i].activeStatus = true;
-		     		}
-		     		else {
-		     			data[i].activeStatus = false;
-		     		}
-		        break; //Stop this loop, we found it!
-		     	}		
-	   		}
-	   		console.log("data after update",data);	
-		   	var obj = data;
-		   	//now write updated array in file after updation
-				write(obj);
-	   	}   	
-	   	changeDesc ( updateStatus);
-      resolve("success");
+    mongo().then(function(){
+			db.collection('todoTB', function (err, collection) {
+				collection.update(
+					{"id": id}, 
+					{$set:{activeStatus:stat}}, 
+					function(err, result){
+	        if(err) throw err;    
+	        console.log('Document Updated Successfully');//resolve(items);
+	        resolve("success"); 
+				});
+			});	
+		})
+		.catch(function(err) {
+			console.log(err);
 		});
-  })   
+  })//promise   
 }
 
 /*
@@ -130,25 +139,25 @@ function toggleStatus(updateStatus , callback) {
 	@param {callback object}
 */
 function toggleAll(condition , callback) {
+	var stat = JSON.parse(condition.s);
+	console.log(stat);
 	return new Promise(function(resolve, reject) {
-    fs.readFile(dev, 'utf8', function (err, data) {
-	    if (err) reject(err);
-	    //success
-			data=JSON.parse(data);
-			data.map(function(item) {
-				if (condition.s == 'false') {
-					return item.activeStatus = true;
-				}
-				else {
-					return item.activeStatus = false;
-				}
-	    	// return item.activeStatus = false;                   
-			});
-			var obj = data;
-			write(obj);
-      resolve(data);
+    mongo().then(function(){
+			db.collection('todoTB', function (err, collection) {
+				collection.updateMany(
+					{}, 
+					{$set:{activeStatus:stat}}, 
+					function(err, result){
+	        if(err) throw err;    
+	        console.log('Document Updated Successfully');//resolve(items);
+	        resolve("success"); 
+				});
+			});	
+		})
+		.catch(function(err) {
+			console.log(err);
 		});
-  })   
+  })//promise   
 }
 
 
@@ -158,20 +167,20 @@ function toggleAll(condition , callback) {
 	@param {callback object}
 */
 function clearCompleted(callback) {
-  function remove(array, element) {
-    return array.filter(e => e.activeStatus !== element);
-	}
 	return new Promise(function(resolve, reject) {
-    fs.readFile(dev, 'utf8', function (err, data) {
-	    if (err) reject(err);
-	    //success
-	    data = JSON.parse(data);
-			var todoArrayAfterDelete = remove(data, false);
-			var obj = todoArrayAfterDelete;
-			write(obj);
-      resolve(obj);
+	mongo().then(function(){
+			db.collection('todoTB', function (err, collection) {
+		   	collection.deleteMany({"activeStatus": false},function(err, items) {
+		      if(err) throw err; 
+		      //success     
+		      resolve("deleted");          
+		  	});
+		  });
+		})
+		.catch(function(err) {
+			console.log(err);
 		});
-  })   
+	});	  
 }
 
 
@@ -181,18 +190,22 @@ function clearCompleted(callback) {
 	@param {callback object}
 */
 function getActive(callback) {
-  function remove(array, element) {
-    return array.filter(e => e.activeStatus !== element);
-	}  
 	return new Promise(function(resolve, reject) {
-    fs.readFile(dev, 'utf8', function (err, data) {
-	    if (err) reject(err);
-	    //success
-	    data = JSON.parse(data);
-	 		var activeArray = remove(data, false);
-      resolve(activeArray);
+		mongo().then(function(){
+			db.collection('todoTB', function (err, collection) {
+		   	collection.find({activeStatus:true}).toArray(function(err, items) {
+		      if(err) throw err; 
+		      //success    
+		      console.log(items); 
+		      resolve(items);          
+		  	});
+		  });
+		})
+		.catch(function(err) {
+			console.log(err);
 		});
-  })   
+
+  })//promise   
 }
 
 
@@ -202,19 +215,21 @@ function getActive(callback) {
 	@param {callback object}
 */
 function getCompleted(callback) {
-	function remove(array, element) {
-  	return array.filter(e => e.activeStatus !== element);
-	}
 	return new Promise(function(resolve, reject) {
-    fs.readFile(dev, 'utf8', function (err, data) {
-	    if (err) reject(err);
-	    //success
-	    data = JSON.parse(data);
-	 		var completedArray = remove(data, true);
-	 		console.log("mod",completedArray);
-      resolve(completedArray);
+		mongo().then(function(){
+			db.collection('todoTB', function (err, collection) {
+		   	collection.find({activeStatus:false}).toArray(function(err, items) {
+		      if(err) throw err; 
+		      //success    
+		      console.log(items); 
+		      resolve(items);          
+		  	});
+		  });
+		})
+		.catch(function(err) {
+			console.log(err);
 		});
-  })   
+  })//PROMISE   
 }
 
 
@@ -224,47 +239,30 @@ function getCompleted(callback) {
 	@param {callback object}
 */
 function alterTask(taskId , text , callback) {
-	console.log("model",taskId);
+	var id = parseFloat(taskId);
+	var txt = text;
+	var tmpT = txt.txt;
+	console.log("model",id);
+	console.log("model",tmpT);
 	return new Promise(function(resolve, reject) {
-    fs.readFile(dev, 'utf8', function (err, data) {
-	    if (err) reject(err);
-	    //success
-	    data=JSON.parse(data)
-			//function to iterate json array and update status
-			function changeDesc(id,text) {
-				//traversing array to delete
-		   	for (var i in data) {
-		     	if (data[i].id == id) {
-		     		data[i].todo = text.txt
-		        break; //Stop this loop, we found it!
-		     	}		
-	   		}
-	   		console.log("data after update",data);	
-		   	var obj = data;
-		   	//now write updated array in file after updation
-				fs.writeFile(dev, JSON.stringify(obj), 'utf-8', function(err) {
-		      if (err) res.status(400).send(err)
-			  });
-	   	}   	
-	   	changeDesc (taskId,text);
-      resolve(text);
+		mongo().then(function(){
+			db.collection('todoTB', function (err, collection) {
+				collection.update(
+					{"id":id}, 
+					{$set:{todo:tmpT}}, 
+					function(err, result){
+	        if(err) throw err;    
+	        console.log('Document Updated Successfully');//resolve(items);
+	        resolve("success"); 
+				});
+			});	
+		})
+		.catch(function(err) {
+			console.log(err);
 		});
-  })   
+  })//PROMISE   
 }
 
-
-/*
-	@function write(obj)
-	@description function to write to JSON file
-	@param {callback object}
-*/
-function write(obj) {
-	fs.writeFile(dev, JSON.stringify(obj), 'utf-8', function(err) {
-      if (err) res.status(400).send(err)
-      console.log("fresh array",obj);
-  		
-  });
-}
 
 /**
   @description exporting objects to be used in other files

@@ -73,13 +73,13 @@ $(document).on('click', '.destroy', function() {
 
 /**
   @function on('click', '#toggle-all', function() {}
-  @description to mark tasks complete
+  @description to mark all tasks complete
 */
 var clicked = false;
 $(document).on('click', '#toggle-all', function() {
 	debugger;
     $.ajax({
-      url: '/markall?s='+true,
+      url: '/markall?s='+false,
       type: 'PUT',    
       success: function(result) {
         debugger;
@@ -103,7 +103,7 @@ $(document).on('click', '#toggle-none', function() {
 	debugger;
   if ($('body #ckecklist').hasClass('complete')) {
     $.ajax({
-      url: '/markall?s='+false,
+      url: '/markall?s='+true,
       type: 'PUT',    
       success: function(result) {
         console.log("data sent to server for status update");
@@ -135,7 +135,7 @@ $(document).on('change', '#checkbox', function() {
    	$.ajax({
       url: '/markdone',
       type: 'PUT',    
-      data: {id:markText},
+      data: {id:markText,status:false},
       success: function(result) {
         debugger;
         console.log("data sent to server for status update");
@@ -155,7 +155,7 @@ $(document).on('change', '#checkbox', function() {
     $.ajax({
       url: '/markdone',
       type: 'PUT',    
-      data: {id:markText},
+      data: {id:markText,status:true},
       success: function(result) {
         console.log("data sent to server for status update");
         $(self).parent().next().children().removeClass('complete');

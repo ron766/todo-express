@@ -61,7 +61,6 @@ function deleteTodo(req,res){
 	else {
 		model.deleteTodo(taskDestroy).then(
 			function(data) {
-				console.log("cnt",data)
 	      res.send("success");
 			},
 			function(err){if(err)throw err;}
@@ -164,7 +163,6 @@ function getCompleted(req,res){
 function alterTask(req,res){
 	var text = req.body;
 	var taskId = req.params.textId;
-	console.log(text,taskId);
 	model.alterTask(taskId , text).then(
 		function(data) {
       res.send(data);
