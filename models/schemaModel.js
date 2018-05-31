@@ -1,55 +1,37 @@
-
+//requiring mongoose
 var mongoose = require('mongoose');
+
+//connecting mongoose to db
 mongoose.connect('mongodb://localhost:27017/todoDB');
 var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
+
+// db.on('error', console.error.bind(console, 'connection error:'));
+
+//requiring validator
+var Validator = require('schema-validator');
 
 //here I define a Schema
 var Schema = mongoose.Schema;
 
-// db.once('open', function() {
-//   // we're connected!
-  var todoSchema = mongoose.Schema( {
-			"id": Number,
-			"todo": String,
-			"activeStatus" : Boolean
-		}
-	);
+//Initializing and validating the schema
+var todoSchema = mongoose.Schema( 
+	{
+		id: {type:Number, required: true, length:{min:13,max:13}},
+		todo: {type:String, required: true, length:{min:1}},
+		activeStatus : {type:Boolean, required: true, length:{min:1}}
 
-	var todoTb = mongoose.model('todoTB', todoSchema,'todoTB');
+	}
+);
 
+//using validator
+var validator = new Validator(todoSchema);
+validator.debug = true;
 
-	module.exports = {todoTb}
-	//console.log(db);
-	// var todo = mongoose.model('Todo', todoSchema);
-	// var todoOb = new todo({ "id": 1122334455667788,
-	// 												"todo": "String",
-	// 												"activeStatus" :true 
-	// 											});
-	//save
-	// todoOb.save(function (err, fluffy) {
-	// 	if (err) return console.error(err);
- //    console.log(fluffy);
-	// });
+//acquiring collection by schema
+var todoTb = mongoose.model('todoTB', todoSchema,'todoTB');
 
-	//find
-// 	var todo = mongoose.model('Todo', todoSchema);
-// 	// todo.find(function(err, docs){
-//  //  	console.log(docs); //correct logging of all comments
-// 	// });
-// 	Book.find({})
-//         .exec(function (err, books) {
-//             if (err) {
-//                 res.send('error occured')
-//             } else {
-//                 console.log(books);
-//                 res.json(books);
-//             }
-//         });
-
-// });
-
-// var schJson = require("../schemas/todoSchema.json");
+//exporting database
+module.exports = {todoTb}
 
 
 
