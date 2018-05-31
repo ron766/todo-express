@@ -4,30 +4,9 @@
 */
 
 /*
-	@description require 'fs' module
+	@description requiring schema model with DB
 */
-const fs = require('fs');
-var arrayOfObjects;
-
-//global db object
-var db;
-
-/*
-	@function mongo()
-	@description mongoDB connection function
-*/
-function mongo() {
-	return new Promise(function(resolve, reject){
-		const uri = 'mongodb://localhost:27017/todoDB'; 
-		MongoClient.connect(uri,{ useNewUrlParser: true }, function (err, client) {
-	  	if(err) throw err;
-	   	//success
-	   	db = client.db('todoDB');
-	   	// console.log(db);
-	   	return resolve(null);
-	  });
-	})
-}
+var {todoTb} = require('./schemaModel');
 
 /*
 	@function showTodo(callback)
@@ -37,18 +16,16 @@ function mongo() {
 function showTodo(callback) {
 	console.log("env",process.env.NODE_ENV);
 	return new Promise(function(resolve, reject) {
-		mongo().then(function(){
-			db.collection('todoTB', function (err, collection) {
-		   	collection.find().toArray(function(err, items) {
-		      if(err) throw err; 
-		      //success     
-		      resolve(items);          
-		  	});
-		  });
-		})
-		.catch(function(err) {
-			console.log(err);
-		});
+		todoTb.find({})
+	    .exec(function (err, todos) {
+        if (err) {
+            reject('error occured')
+        } 
+        else {
+          console.log(todos);
+          resolve(todos); 
+        }
+	    });
   })//Promise  
 }
 
@@ -59,24 +36,17 @@ function showTodo(callback) {
 */
 function addTodo(task , callback) {
 	return new Promise(function(resolve, reject) {
-		//mongo
-		mongo().then(function(){
-	   	db.collection('todoTB', function (err, collection) {
-				timestamp = new Date().getTime();
-		  	// var arrayOfObjects = JSON.parse(data);
-			  var tmpArrayOfObjects = {
-				  todo: task , 
-				  id: timestamp,
-				  activeStatus: true
-				};
-				// arrayOfObjects.push(tmpArrayOfObjects);
-				collection.insert({ id: timestamp, todo: task, activeStatus: true });
-				resolve(tmpArrayOfObjects);
-			});
-		})
-		.catch(function(err) {
-			console.log(err);
+		timestamp = new Date().getTime();
+		var todoOb = new todoTb ({ "id": timestamp,
+															"todo": task,
+															"activeStatus" :true 
+														});
+		todoOb.save(function (err, fluffy) {
+			if (err) return console.error(err);
+			//success
+		  console.log(fluffy);
 		});
+		resolve(todoOb); 
   })//promise end   
 }
 
@@ -88,22 +58,17 @@ function addTodo(task , callback) {
 function deleteTodo(taskDestroy , callback) {
 	var id = parseFloat(taskDestroy.id);
 	return new Promise(function(resolve, reject) {
-		//mongo
-		mongo().then(function(){
-			db.collection('todoTB', function (err, collection) {
-     		try {
-		     	collection.deleteOne({"id":id});
-		    }
-	     	catch(e) {
-	     		console.log(e);
-	     	}
-      	resolve(taskDestroy);
-     	});
-		})
-		.catch(function(err) {
-			console.log(err);
-		});
-  })   
+		todoTb.find({ id:id }).remove()
+			.exec(function (err, todos) {
+        if (err) {
+          reject('error occured')
+        } 
+        else {
+          console.log(todos);
+          resolve(taskDestroy); 
+        }
+	    });
+  })//promise   
 }
 
 /*
@@ -115,21 +80,16 @@ function toggleStatus(updateStatus , callback) {
 	var id = parseFloat(updateStatus.id);
 	var stat = JSON.parse(updateStatus.status);
 	return new Promise(function(resolve, reject) {
-    mongo().then(function(){
-			db.collection('todoTB', function (err, collection) {
-				collection.update(
-					{"id": id}, 
-					{$set:{activeStatus:stat}}, 
-					function(err, result){
-	        if(err) throw err;    
-	        console.log('Document Updated Successfully');//resolve(items);
-	        resolve("success"); 
-				});
-			});	
-		})
-		.catch(function(err) {
-			console.log(err);
-		});
+		todoTb.find({ id:id }).update({activeStatus:stat})
+			.exec(function (err, todos) {
+        if (err) {
+          reject('error occured')
+        } 
+        else {
+          console.log(todos);
+          resolve("success"); 
+        }
+	    });
   })//promise   
 }
 
@@ -142,21 +102,16 @@ function toggleAll(condition , callback) {
 	var stat = JSON.parse(condition.s);
 	console.log(stat);
 	return new Promise(function(resolve, reject) {
-    mongo().then(function(){
-			db.collection('todoTB', function (err, collection) {
-				collection.updateMany(
-					{}, 
-					{$set:{activeStatus:stat}}, 
-					function(err, result){
-	        if(err) throw err;    
-	        console.log('Document Updated Successfully');//resolve(items);
-	        resolve("success"); 
-				});
-			});	
-		})
-		.catch(function(err) {
-			console.log(err);
-		});
+		todoTb.find().updateMany({activeStatus:stat})
+			.exec(function (err, todos) {
+        if (err) {
+          reject('error occured')
+        } 
+        else {
+          console.log(todos);
+          resolve("success"); 
+        }
+	    });
   })//promise   
 }
 
@@ -168,18 +123,16 @@ function toggleAll(condition , callback) {
 */
 function clearCompleted(callback) {
 	return new Promise(function(resolve, reject) {
-	mongo().then(function(){
-			db.collection('todoTB', function (err, collection) {
-		   	collection.deleteMany({"activeStatus": false},function(err, items) {
-		      if(err) throw err; 
-		      //success     
-		      resolve("deleted");          
-		  	});
-		  });
-		})
-		.catch(function(err) {
-			console.log(err);
-		});
+		todoTb.find().remove({activeStatus:false})
+			.exec(function (err, todos) {
+        if (err) {
+          reject('error occured')
+        } 
+        else {
+          console.log(todos);
+          resolve("success"); 
+        }
+	    });
 	});	  
 }
 
@@ -191,20 +144,16 @@ function clearCompleted(callback) {
 */
 function getActive(callback) {
 	return new Promise(function(resolve, reject) {
-		mongo().then(function(){
-			db.collection('todoTB', function (err, collection) {
-		   	collection.find({activeStatus:true}).toArray(function(err, items) {
-		      if(err) throw err; 
-		      //success    
-		      console.log(items); 
-		      resolve(items);          
-		  	});
-		  });
-		})
-		.catch(function(err) {
-			console.log(err);
-		});
-
+		todoTb.find({activeStatus:true})
+	    .exec(function (err, todos) {
+        if (err) {
+            reject('error occured')
+        } 
+        else {
+          console.log(todos);
+          resolve(todos); 
+        }
+	    });
   })//promise   
 }
 
@@ -216,19 +165,16 @@ function getActive(callback) {
 */
 function getCompleted(callback) {
 	return new Promise(function(resolve, reject) {
-		mongo().then(function(){
-			db.collection('todoTB', function (err, collection) {
-		   	collection.find({activeStatus:false}).toArray(function(err, items) {
-		      if(err) throw err; 
-		      //success    
-		      console.log(items); 
-		      resolve(items);          
-		  	});
-		  });
-		})
-		.catch(function(err) {
-			console.log(err);
-		});
+		todoTb.find({activeStatus:false})
+	    .exec(function (err, todos) {
+        if (err) {
+            reject('error occured')
+        } 
+        else {
+          console.log(todos);
+          resolve(todos); 
+        }
+	    });
   })//PROMISE   
 }
 
@@ -242,24 +188,17 @@ function alterTask(taskId , text , callback) {
 	var id = parseFloat(taskId);
 	var txt = text;
 	var tmpT = txt.txt;
-	console.log("model",id);
-	console.log("model",tmpT);
 	return new Promise(function(resolve, reject) {
-		mongo().then(function(){
-			db.collection('todoTB', function (err, collection) {
-				collection.update(
-					{"id":id}, 
-					{$set:{todo:tmpT}}, 
-					function(err, result){
-	        if(err) throw err;    
-	        console.log('Document Updated Successfully');//resolve(items);
-	        resolve("success"); 
-				});
-			});	
-		})
-		.catch(function(err) {
-			console.log(err);
-		});
+		todoTb.find({ id:id }).update({todo:tmpT})
+			.exec(function (err, todos) {
+        if (err) {
+          reject('error occured')
+        } 
+        else {
+          console.log(todos);
+          resolve("success"); 
+        }
+	    });
   })//PROMISE   
 }
 

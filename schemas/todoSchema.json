@@ -1,0 +1,7 @@
+[
+	{
+		"id": Int64,
+		"todo": String,
+		"activeStatus" :false
+	}
+]
