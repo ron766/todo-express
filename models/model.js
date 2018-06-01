@@ -7,6 +7,7 @@
 	@description requiring schema model with DB
 */
 var {todoTb} = require('./schemaModel');
+var assert = require('assert');
 
 /*
 	@function showTodo(callback)
@@ -42,11 +43,16 @@ function addTodo(task , callback) {
 															"activeStatus" :true 
 														});
 		todoOb.save(function (err, fluffy) {
-			if (err) return console.error(err);
-			//success
-		  console.log(fluffy);
-		});
-		resolve(todoOb); 
+			if (err) {
+				reject("Schema validation error:",err.errors['id'].message,'ID length should be 13!');
+				reject("Schema validation error:",err.errors['todo'].message,'Task input should not be blank!');
+				reject("Schema validation error:",err.errors['activeStatus'].message,'Task input should not be blank!');
+			}  
+			else {
+				console.log(fluffy);
+		  	resolve(todoOb);
+			}
+		});		 
   })//promise end   
 }
 
@@ -61,7 +67,7 @@ function deleteTodo(taskDestroy , callback) {
 		todoTb.find({ id:id }).remove()
 			.exec(function (err, todos) {
         if (err) {
-          reject('error occured')
+          reject("Schema validation error:",err.errors['id'].message,'ID length should be 13!')
         } 
         else {
           console.log(todos);
@@ -83,7 +89,8 @@ function toggleStatus(updateStatus , callback) {
 		todoTb.find({ id:id }).update({activeStatus:stat})
 			.exec(function (err, todos) {
         if (err) {
-          reject('error occured')
+          reject("Schema validation error:",err.errors['id'].message,'ID length should be 13!');
+          reject("Schema validation error:",err.errors['activeStatus'].message,'Task input should not be blank!');
         } 
         else {
           console.log(todos);
@@ -105,7 +112,7 @@ function toggleAll(condition , callback) {
 		todoTb.find().updateMany({activeStatus:stat})
 			.exec(function (err, todos) {
         if (err) {
-          reject('error occured')
+          reject("Schema validation error:",err.errors['activeStatus'].message,'Task input should not be blank!');
         } 
         else {
           console.log(todos);
@@ -126,7 +133,7 @@ function clearCompleted(callback) {
 		todoTb.find().remove({activeStatus:false})
 			.exec(function (err, todos) {
         if (err) {
-          reject('error occured')
+          reject("Schema validation error:",err.errors['activeStatus'].message,'Task input should not be blank!');
         } 
         else {
           console.log(todos);
@@ -147,7 +154,7 @@ function getActive(callback) {
 		todoTb.find({activeStatus:true})
 	    .exec(function (err, todos) {
         if (err) {
-            reject('error occured')
+          reject("Schema validation error:",err.errors['activeStatus'].message,'Task input should not be blank!');
         } 
         else {
           console.log(todos);
@@ -168,7 +175,7 @@ function getCompleted(callback) {
 		todoTb.find({activeStatus:false})
 	    .exec(function (err, todos) {
         if (err) {
-            reject('error occured')
+          reject("Schema validation error:",err.errors['activeStatus'].message,'Task input should not be blank!');
         } 
         else {
           console.log(todos);
@@ -192,7 +199,8 @@ function alterTask(taskId , text , callback) {
 		todoTb.find({ id:id }).update({todo:tmpT})
 			.exec(function (err, todos) {
         if (err) {
-          reject('error occured')
+          reject("Schema validation error:",err.errors['id'].message,'ID length should be 13!');
+					reject("Schema validation error:",err.errors['todo'].message,'Task input should not be blank!');
         } 
         else {
           console.log(todos);

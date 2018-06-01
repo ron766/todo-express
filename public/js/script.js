@@ -122,7 +122,7 @@ $(document).on('click', '#toggle-none', function() {
 
 /**
   @function on('click', '#checkbox', function() {}
-  @description to mark task completed by checkbox through ajax call
+  @description to mark/unmark task completed by checkbox through ajax call
 */
 $(document).on('change', '#checkbox', function() {
   var markText;

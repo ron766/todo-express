@@ -30,7 +30,7 @@ var app = express();
 app.use(bodyParser.urlencoded({ extended: false }))
 
 /**
-  @description creating express object in app
+  @description specifying body parser to use json
 */
 app.use(bodyParser.json())
 
@@ -41,7 +41,7 @@ app.set('view engine', 'html');
 app.engine('.html', require('ejs').renderFile);
 
 /**
-  @description to use css and html
+  @description to set static and view paths to use css and html
 */
 app.set('views',__dirname+'/views');
 app.use(express.static(__dirname+'/public'))
@@ -73,4 +73,5 @@ app.listen(port, () => {
  	console.log(`Server is up on port ${port}`);
 });
 
+//exporting app object
 module.exports = {app};

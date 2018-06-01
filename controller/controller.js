@@ -38,7 +38,6 @@ function addTodo(req,res) {
 	else {
 		model.addTodo(task).then(
 			function(data) {
-				console.log("cnt:",data);
 				res.send(data);
 			},
 			function(err){if(err)throw err;}
@@ -63,7 +62,9 @@ function deleteTodo(req,res){
 			function(data) {
 	      res.send("success");
 			},
-			function(err){if(err)throw err;}
+			function(err) {
+				if(err)throw err;
+			}
 		)//then close
 	}
 }
@@ -146,7 +147,6 @@ function getActive(req,res){
 function getCompleted(req,res){
 	model.getCompleted().then(
 		function(data) {
-			console.log("cnt",data);
       res.send(data);
 		},
 		function(err){if(err)throw err;}
@@ -175,5 +175,7 @@ function alterTask(req,res){
 /**
   @description exporting objects to be used in other files
 */
-module.exports = {showTodo , addTodo , deleteTodo , toggleStatus , toggleAll , clearCompleted , getActive , getCompleted , alterTask};
+module.exports = {
+	showTodo , addTodo , deleteTodo , toggleStatus , toggleAll , clearCompleted , getActive , getCompleted , alterTask
+};
 

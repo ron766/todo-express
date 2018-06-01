@@ -5,27 +5,46 @@ var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/todoDB');
 var db = mongoose.connection;
 
-// db.on('error', console.error.bind(console, 'connection error:'));
-
-//requiring validator
-var Validator = require('schema-validator');
-
 //here I define a Schema
 var Schema = mongoose.Schema;
 
 //Initializing and validating the schema
 var todoSchema = mongoose.Schema( 
 	{
-		id: {type:Number, required: true, length:{min:13,max:13}},
-		todo: {type:String, required: true, length:{min:1}},
-		activeStatus : {type:Boolean, required: true, length:{min:1}}
-
+		id: {	
+					type:Number,
+					required:true, 
+					validate: {
+						validator: function(v) {
+							return v.length != 13
+						}
+					},
+					message: 'ID length should be 13!'
+				},
+		todo: { 
+						type:String,
+						required:true,
+						length:{min:1},
+						validate: {
+							validator: function(v) {
+								return v != null
+							}
+						},
+						message: 'Task input should not be blank!' 
+					},
+		activeStatus : { 
+											type:Boolean, 
+											required: true, 
+											length:{min:1},
+											validate: {
+												validator: function(v) {
+													return v != null
+												}
+											},
+											message: 'Task status should not be blank!'  
+									 }
 	}
 );
-
-//using validator
-var validator = new Validator(todoSchema);
-validator.debug = true;
 
 //acquiring collection by schema
 var todoTb = mongoose.model('todoTB', todoSchema,'todoTB');

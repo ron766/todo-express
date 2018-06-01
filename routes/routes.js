@@ -4,12 +4,12 @@
 */
 
 /**
-  @description acquiring controller file
+  @description requiring controller file
 */
 const controller = require('./../controller/controller');
 
 /**
-  @description acquiring router 
+  @description requiring router 
 */
 const router = require('express').Router();
 
